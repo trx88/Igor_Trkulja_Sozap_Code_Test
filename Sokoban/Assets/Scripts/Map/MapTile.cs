@@ -7,6 +7,7 @@ public enum EnumTileType
     Grass,
     Box,
     Target,
+    Player,
     None
 };
 

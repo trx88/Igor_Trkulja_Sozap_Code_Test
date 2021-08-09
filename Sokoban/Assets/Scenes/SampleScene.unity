@@ -156,7 +156,7 @@ MonoBehaviour:
   grassTile: {fileID: -4230021439479643723, guid: 9de56018022716444b9c7339440eba0a, type: 3}
   boxTile: {fileID: -4658909341757354249, guid: 3a7130d0024cc394f8254cecca32fefc, type: 3}
   targetTile: {fileID: -1410942225108715069, guid: f9a528933a796b842840a95b60ec76f3, type: 3}
-  playerTile: {fileID: 0}
+  playerTile: {fileID: 2469491233717342455, guid: d7a014f6a82eb5e45bf7cc66b841dd5e, type: 3}
 --- !u!4 &430962726
 Transform:
   m_ObjectHideFlags: 0

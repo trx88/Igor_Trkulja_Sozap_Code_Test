@@ -157,6 +157,7 @@ MonoBehaviour:
   boxTile: {fileID: -4658909341757354249, guid: 3a7130d0024cc394f8254cecca32fefc, type: 3}
   targetTile: {fileID: -1410942225108715069, guid: f9a528933a796b842840a95b60ec76f3, type: 3}
   playerTile: {fileID: 2469491233717342455, guid: d7a014f6a82eb5e45bf7cc66b841dd5e, type: 3}
+  emptyTile: {fileID: -2625107653663858762, guid: 3ba92ffee07c3b74ea07ca1fec0ac404, type: 3}
 --- !u!4 &430962726
 Transform:
   m_ObjectHideFlags: 0

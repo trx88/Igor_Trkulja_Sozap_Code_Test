@@ -18,8 +18,8 @@ public class MapTile
     public bool IsPushable = false;
     public EnumTileType TileType;
 
-    private float positionX;
-    public float PositionX
+    private int positionX;
+    public int PositionX
     {
         get => positionX;
         set
@@ -28,8 +28,8 @@ public class MapTile
         }
     }
 
-    private float positionY;
-    public float PositionY
+    private int positionY;
+    public int PositionY
     {
         get => positionY;
         set
@@ -38,8 +38,8 @@ public class MapTile
         }
     }
 
-    private float boundryX;
-    public float BoundryX
+    private int boundryX;
+    public int BoundryX
     {
         get => boundryX;
         set
@@ -48,13 +48,33 @@ public class MapTile
         }
     }
 
-    private float boundryY;
-    public float BoundryY
+    private int boundryY;
+    public int BoundryY
     {
         get => boundryY;
         set
         {
             boundryY = value;
+        }
+    }
+
+    private int rowIndex;
+    public int RowIndex
+    {
+        get => rowIndex;
+        set
+        {
+            rowIndex = value;
+        }
+    }
+
+    private int columnIndex;
+    public int ColumnIndex
+    {
+        get => columnIndex;
+        set
+        {
+            columnIndex = value;
         }
     }
 
@@ -100,6 +120,12 @@ public class MapTile
                     IsPushable = false;
                 }
                 break;
+            case EnumTileType.Player:
+                {
+                    IsTraversable = true;
+                    IsPushable = false;
+                }
+                break;
             case EnumTileType.None:
                 {
                     IsTraversable = false;
@@ -109,7 +135,15 @@ public class MapTile
         }
     }
 
-    public void SetPosition(float x, float y, float bx, float by)
+    public void SetPosition(int x, int y)
+    {
+        PositionX = x;
+        PositionY = y;
+        BoundryX = x + 1;
+        BoundryY = y - 1;
+    }
+
+    public void SetPosition(int x, int y, int bx, int by)
     {
         PositionX = x;
         PositionY = y;

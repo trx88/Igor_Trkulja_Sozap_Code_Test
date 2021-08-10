@@ -150,4 +150,18 @@ public class MapTile
         BoundryX = bx;
         BoundryY = by;
     }
+
+    public void TurnIntoGrass()
+    {
+        TileType = EnumTileType.Grass;
+        IsTraversable = true;
+        IsPushable = false;
+    }
+
+    public void TurnIntoBox()
+    {
+        TileType = EnumTileType.Box;
+        IsTraversable = false;
+        IsPushable = true;
+    }
 }

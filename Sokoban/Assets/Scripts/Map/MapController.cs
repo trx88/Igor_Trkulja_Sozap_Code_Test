@@ -188,8 +188,8 @@ public class MapController : MonoBehaviour
                         break;
                     case EnumTileType.Box:
                         {
-                            PlaceTile(boxTile, mapInput[heightIndex][widthIndex].TileID, widthIndex * tileSize, -heightIndex * tileSize);
-                            Instantiate(grassTile, new Vector3(widthIndex * tileSize, -heightIndex * tileSize, 0), Quaternion.identity);
+                            PlaceTile(boxTile, mapInput[heightIndex][widthIndex].TileID, widthIndex * tileSize, -heightIndex * tileSize, -1);
+                            Instantiate(grassTile, new Vector3(widthIndex * tileSize, -heightIndex * tileSize, 10), Quaternion.identity);
                         }
                         break;
                     case EnumTileType.Target:
@@ -277,17 +277,76 @@ public class MapController : MonoBehaviour
         PlayerTileReference.transform.position = Vector3.MoveTowards(
                     PlayerTileReference.transform.position,
                     position,
-                    1.0f
+                    0.01f
                     );
     }
 
-    void MoveBox(ref TerrainTile box, Vector3 position)
+    void MoveBox(ref TerrainTile box, Vector3 position, MapTile neighbor, MapTile boxNeighbor, float deltaTime)
     {
-        box.transform.position = Vector3.MoveTowards(
+        //box.transform.position = Vector3.MoveTowards(
+        //    box.transform.position,
+        //    position,
+        //    0.01f
+        //    );
+        StartCoroutine(MoveBoxCoroutine(box, position, neighbor, boxNeighbor, 1.0f));
+    }
+
+    IEnumerator MovePlayerCoroutine(Vector3 position, MapTile neighbor, float moveTime = 1.0f)
+    {
+        float elapsedTime = 0.0f;
+        while (!AlmostEqual(PlayerTileReference.transform.position, position, 0.01f))
+        {
+            PlayerTileReference.transform.position = Vector3.Lerp(
+            PlayerTileReference.transform.position,
+            position,
+            (elapsedTime / moveTime)
+            );
+            elapsedTime += Time.deltaTime;
+            //yield return null;
+            yield return new WaitForSeconds(0.01f);
+        }
+
+        if (AlmostEqual(PlayerTileReference.transform.position, position, 0.01f))
+        {
+            //Debug.Log("Change ID");
+            PlayerTileReference.CurrentTileID = neighbor.TileID;
+        }
+        yield return null;
+    }
+
+    IEnumerator MoveBoxCoroutine(TerrainTile box, Vector3 position, MapTile neighbor, MapTile boxNeighbor, float moveTime = 1.0f)
+    {
+        float elapsedTime = 0.0f;
+        while (!AlmostEqual(box.transform.position, position, 0.01f))
+        {
+            box.transform.position = Vector3.Lerp(
             box.transform.position,
             position,
-            1.0f
+            (elapsedTime / moveTime)
             );
+            elapsedTime += Time.deltaTime;
+            
+
+
+            yield return new WaitForSeconds(0.01f);
+        }
+
+        if (AlmostEqual(box.transform.position, position, 0.01f))
+        {
+            //boxTile.TileID = boxNeighbor.TileID;
+            //update placed tiles (TerrainTile)
+            TerrainTile temp = PlacedTiles[neighbor.TileID];
+            PlacedTiles[neighbor.TileID] = PlacedTiles[boxNeighbor.TileID];
+            PlacedTiles[boxNeighbor.TileID] = temp;
+
+            //update processed tiles (MapTile)
+            ProcessedTiles[boxNeighbor.TileID].TurnIntoBox();
+            ProcessedTiles[neighbor.TileID].TurnIntoGrass();
+
+            //set neighbors again
+            //SetNeighborsForEachTile();
+        }
+        yield return null;
     }
 
     void TryMoveRight(float deltaTime)
@@ -300,23 +359,16 @@ public class MapController : MonoBehaviour
             {
                 Vector3 newPosition = new Vector3(neighbor.PositionX, neighbor.PositionY, -1);
 
-                //PlayerTileReference.transform.position = Vector3.Lerp(
-                //    PlayerTileReference.transform.position,
-                //    newPosition, 
-                //    deltaTime * 5
-                //    );
+                //while (!AlmostEqual(PlayerTileReference.transform.position, newPosition, 0.01f))
+                //{
+                //    MovePlayer(newPosition);
+                //}
 
-                //PlayerTileReference.transform.position = Vector3.MoveTowards(
-                //    PlayerTileReference.transform.position,
-                //    newPosition,
-                //    1.0f
-                //    );
-                MovePlayer(newPosition);
-
-                if (AlmostEqual(PlayerTileReference.transform.position, newPosition, 0.05f))
-                {
-                    PlayerTileReference.CurrentTileID = neighbor.TileID;
-                }
+                //if (AlmostEqual(PlayerTileReference.transform.position, newPosition, 0.02f))
+                //{
+                //    PlayerTileReference.CurrentTileID = neighbor.TileID;
+                //}
+                StartCoroutine(MovePlayerCoroutine(newPosition, neighbor, 1.0f));
             }
             else if (neighbor.TileID == PlayerTileReference.CurrentTileID + 1 &&
                 neighbor.IsPushable)
@@ -331,15 +383,17 @@ public class MapController : MonoBehaviour
                         Vector3 newBoxPosition = new Vector3(boxNeighbor.PositionX, boxNeighbor.PositionY, -1);
 
                         TerrainTile boxTile = PlacedTiles[neighbor.TileID];
-                        while (!AlmostEqual(boxTile.transform.position, newBoxPosition, 0.05f))
-                        {
-                            MoveBox(ref boxTile, newBoxPosition);
-                        }
+                        //while (!AlmostEqual(boxTile.transform.position, newBoxPosition, 0.01f))
+                        //{
+                        //    MoveBox(ref boxTile, newBoxPosition, deltaTime);
+                        //}
+                        MoveBox(ref boxTile, newBoxPosition, neighbor, boxNeighbor, deltaTime);
 
                         Vector3 newPosition = new Vector3(neighbor.PositionX, neighbor.PositionY, -1);
-                        MovePlayer(newPosition);
+                        //MovePlayer(newPosition);
+                        StartCoroutine(MovePlayerCoroutine(newPosition, neighbor, 1.0f));
 
-                        if (AlmostEqual(boxTile.transform.position, newBoxPosition, 0.05f))
+                        if (AlmostEqual(boxTile.transform.position, newBoxPosition, 0.01f))
                         {
                             //boxTile.TileID = boxNeighbor.TileID;
                             //update placed tiles (TerrainTile)
@@ -348,12 +402,8 @@ public class MapController : MonoBehaviour
                             PlacedTiles[boxNeighbor.TileID] = temp;
 
                             //update processed tiles (MapTile)
-                            ProcessedTiles[boxNeighbor.TileID].TileType = EnumTileType.Box;
-                            ProcessedTiles[boxNeighbor.TileID].IsPushable = true;
-                            ProcessedTiles[boxNeighbor.TileID].IsTraversable = false;
-                            ProcessedTiles[neighbor.TileID].TileType = EnumTileType.Grass;
-                            ProcessedTiles[neighbor.TileID].IsPushable = false;
-                            ProcessedTiles[neighbor.TileID].IsTraversable = true;
+                            ProcessedTiles[boxNeighbor.TileID].TurnIntoBox();
+                            ProcessedTiles[neighbor.TileID].TurnIntoGrass();
 
                             //set neighbors again
                             //SetNeighborsForEachTile();
@@ -379,18 +429,16 @@ public class MapController : MonoBehaviour
             {
                 Vector3 newPosition = new Vector3(neighbor.PositionX, neighbor.PositionY, -1);
 
-                //PlayerTileReference.transform.position = Vector3.Lerp(
-                //    PlayerTileReference.transform.position,
-                //    newPosition,
-                //    deltaTime * 5
-                //    );
+                //while (!AlmostEqual(PlayerTileReference.transform.position, newPosition, 0.01f))
+                //{
+                //    MovePlayer(newPosition);
+                //}
 
-                MovePlayer(newPosition);
-
-                if (AlmostEqual(PlayerTileReference.transform.position, newPosition, 0.05f))
-                {
-                    PlayerTileReference.CurrentTileID = neighbor.TileID;
-                }
+                //if (AlmostEqual(PlayerTileReference.transform.position, newPosition, 0.01f))
+                //{
+                //    PlayerTileReference.CurrentTileID = neighbor.TileID;
+                //}
+                StartCoroutine(MovePlayerCoroutine(newPosition, neighbor, 1.0f));
             }
             else if (neighbor.TileID == PlayerTileReference.CurrentTileID - 1 &&
                 neighbor.IsPushable)
@@ -405,15 +453,17 @@ public class MapController : MonoBehaviour
                         Vector3 newBoxPosition = new Vector3(boxNeighbor.PositionX, boxNeighbor.PositionY, -1);
 
                         TerrainTile boxTile = PlacedTiles[neighbor.TileID];
-                        while (!AlmostEqual(boxTile.transform.position, newBoxPosition, 0.05f))
-                        {
-                            MoveBox(ref boxTile, newBoxPosition);
-                        }
+                        //while (!AlmostEqual(boxTile.transform.position, newBoxPosition, 0.01f))
+                        //{
+                        //    MoveBox(ref boxTile, newBoxPosition, deltaTime);
+                        //}
+                        MoveBox(ref boxTile, newBoxPosition, neighbor, boxNeighbor, deltaTime);
 
                         Vector3 newPosition = new Vector3(neighbor.PositionX, neighbor.PositionY, -1);
-                        MovePlayer(newPosition);
+                        //MovePlayer(newPosition);
+                        StartCoroutine(MovePlayerCoroutine(newPosition, neighbor, 1.0f));
 
-                        if (AlmostEqual(boxTile.transform.position, newBoxPosition, 0.05f))
+                        if (AlmostEqual(boxTile.transform.position, newBoxPosition, 0.01f))
                         {
                             //boxTile.TileID = boxNeighbor.TileID;
                             //update placed tiles (TerrainTile)
@@ -422,12 +472,8 @@ public class MapController : MonoBehaviour
                             PlacedTiles[boxNeighbor.TileID] = temp;
 
                             //update processed tiles (MapTile)
-                            ProcessedTiles[boxNeighbor.TileID].TileType = EnumTileType.Box;
-                            ProcessedTiles[boxNeighbor.TileID].IsPushable = true;
-                            ProcessedTiles[boxNeighbor.TileID].IsTraversable = false;
-                            ProcessedTiles[neighbor.TileID].TileType = EnumTileType.Grass;
-                            ProcessedTiles[neighbor.TileID].IsPushable = false;
-                            ProcessedTiles[neighbor.TileID].IsTraversable = true;
+                            ProcessedTiles[boxNeighbor.TileID].TurnIntoBox();
+                            ProcessedTiles[neighbor.TileID].TurnIntoGrass();
 
                             //set neighbors again
                             //SetNeighborsForEachTile();
@@ -459,12 +505,16 @@ public class MapController : MonoBehaviour
                 //    deltaTime * 5
                 //    );
 
-                MovePlayer(newPosition);
+                //while (!AlmostEqual(PlayerTileReference.transform.position, newPosition, 0.01f))
+                //{
+                //    MovePlayer(newPosition);
+                //}
 
-                if (AlmostEqual(PlayerTileReference.transform.position, newPosition, 0.05f))
-                {
-                    PlayerTileReference.CurrentTileID = neighbor.TileID;
-                }
+                //if (AlmostEqual(PlayerTileReference.transform.position, newPosition, 0.01f))
+                //{
+                //    PlayerTileReference.CurrentTileID = neighbor.TileID;
+                //}
+                StartCoroutine(MovePlayerCoroutine(newPosition, neighbor, 1.0f));
             }
             else if (neighbor.TileID == PlayerTileReference.CurrentTileID - mapWidth &&
                 neighbor.IsPushable)
@@ -479,15 +529,17 @@ public class MapController : MonoBehaviour
                         Vector3 newBoxPosition = new Vector3(boxNeighbor.PositionX, boxNeighbor.PositionY, 0);
 
                         TerrainTile boxTile = PlacedTiles[neighbor.TileID];
-                        while (!AlmostEqual(boxTile.transform.position, newBoxPosition, 0.05f))
-                        {
-                            MoveBox(ref boxTile, newBoxPosition);
-                        }
+                        //while (!AlmostEqual(boxTile.transform.position, newBoxPosition, 0.01f))
+                        //{
+                        //    MoveBox(ref boxTile, newBoxPosition, deltaTime);
+                        //}
+                        MoveBox(ref boxTile, newBoxPosition, neighbor, boxNeighbor, deltaTime);
 
                         Vector3 newPosition = new Vector3(neighbor.PositionX, neighbor.PositionY, -1);
-                        MovePlayer(newPosition);
+                        //MovePlayer(newPosition);
+                        StartCoroutine(MovePlayerCoroutine(newPosition, neighbor, 1.0f));
 
-                        if (AlmostEqual(boxTile.transform.position, newBoxPosition, 0.05f))
+                        if (AlmostEqual(boxTile.transform.position, newBoxPosition, 0.01f))
                         {
                             //boxTile.TileID = boxNeighbor.TileID;
                             //update placed tiles (TerrainTile)
@@ -496,12 +548,8 @@ public class MapController : MonoBehaviour
                             PlacedTiles[boxNeighbor.TileID] = temp;
 
                             //update processed tiles (MapTile)
-                            ProcessedTiles[boxNeighbor.TileID].TileType = EnumTileType.Box;
-                            ProcessedTiles[boxNeighbor.TileID].IsPushable = true;
-                            ProcessedTiles[boxNeighbor.TileID].IsTraversable = false;
-                            ProcessedTiles[neighbor.TileID].TileType = EnumTileType.Grass;
-                            ProcessedTiles[neighbor.TileID].IsPushable = false;
-                            ProcessedTiles[neighbor.TileID].IsTraversable = true;
+                            ProcessedTiles[boxNeighbor.TileID].TurnIntoBox();
+                            ProcessedTiles[neighbor.TileID].TurnIntoGrass();
 
                             //set neighbors again
                             //SetNeighborsForEachTile();
@@ -532,12 +580,16 @@ public class MapController : MonoBehaviour
                 //    deltaTime * 5
                 //    );
 
-                MovePlayer(newPosition);
+                //while (!AlmostEqual(PlayerTileReference.transform.position, newPosition, 0.01f))
+                //{
+                //    MovePlayer(newPosition);
+                //}
 
-                if (AlmostEqual(PlayerTileReference.transform.position, newPosition, 0.05f))
-                {
-                    PlayerTileReference.CurrentTileID = neighbor.TileID;
-                }
+                //if (AlmostEqual(PlayerTileReference.transform.position, newPosition, 0.01f))
+                //{
+                //    PlayerTileReference.CurrentTileID = neighbor.TileID;
+                //}
+                StartCoroutine(MovePlayerCoroutine(newPosition, neighbor, 1.0f));
             }
             else if (neighbor.TileID == PlayerTileReference.CurrentTileID + mapWidth &&
                 neighbor.IsPushable)
@@ -552,15 +604,17 @@ public class MapController : MonoBehaviour
                         Vector3 newBoxPosition = new Vector3(boxNeighbor.PositionX, boxNeighbor.PositionY, -1);
 
                         TerrainTile boxTile = PlacedTiles[neighbor.TileID];
-                        while(!AlmostEqual(boxTile.transform.position, newBoxPosition, 0.05f))
-                        {
-                            MoveBox(ref boxTile, newBoxPosition);
-                        }
+                        //while(!AlmostEqual(boxTile.transform.position, newBoxPosition, 0.01f))
+                        //{
+                        //    MoveBox(ref boxTile, newBoxPosition, deltaTime);
+                        //}
+                        MoveBox(ref boxTile, newBoxPosition, neighbor, boxNeighbor, deltaTime);
 
                         Vector3 newPosition = new Vector3(neighbor.PositionX, neighbor.PositionY, -1);
-                        MovePlayer(newPosition);
+                        //MovePlayer(newPosition);
+                        StartCoroutine(MovePlayerCoroutine(newPosition, neighbor, 1.0f));
 
-                        if (AlmostEqual(boxTile.transform.position, newBoxPosition, 0.05f))
+                        if (AlmostEqual(boxTile.transform.position, newBoxPosition, 0.01f))
                         {
                             //boxTile.TileID = boxNeighbor.TileID;
                             //update placed tiles (TerrainTile)
@@ -569,12 +623,8 @@ public class MapController : MonoBehaviour
                             PlacedTiles[boxNeighbor.TileID] = temp;
 
                             //update processed tiles (MapTile)
-                            ProcessedTiles[boxNeighbor.TileID].TileType = EnumTileType.Box;
-                            ProcessedTiles[boxNeighbor.TileID].IsPushable = true;
-                            ProcessedTiles[boxNeighbor.TileID].IsTraversable = false;
-                            ProcessedTiles[neighbor.TileID].TileType = EnumTileType.Grass;
-                            ProcessedTiles[neighbor.TileID].IsPushable = false;
-                            ProcessedTiles[neighbor.TileID].IsTraversable = true;
+                            ProcessedTiles[boxNeighbor.TileID].TurnIntoBox();
+                            ProcessedTiles[neighbor.TileID].TurnIntoGrass();
 
                             //set neighbors again
                             //SetNeighborsForEachTile();

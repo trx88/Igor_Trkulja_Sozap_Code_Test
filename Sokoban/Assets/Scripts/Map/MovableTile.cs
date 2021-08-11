@@ -2,24 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TerrainTile : MapTile, ITerrainTile
+public class MovableTile : MapTile, ITile
 {
     public void PrepareTile(MapTileData tileData)
     {
-        
+        throw new System.NotImplementedException();
     }
 
     public void SayHello()
     {
-        Debug.Log("I'm a terrain tile");
+        Debug.Log("I'm a movable tile");
     }
 
     public MapTile SpawnTile(int positionX, int positionY)
     {
-        PositionX = positionX;
-        PositionY = positionY;
-        BoundryX = positionX + 1;
-        BoundryY = positionY - 1;
         throw new System.NotImplementedException();
     }
 

@@ -22,46 +22,46 @@ public class MapController : MonoBehaviour
     private int mapWidth = 8;
     private int mapHeight = 5;
 
-    private MapTile[][] mapInput = new MapTile[][]
+    private MapTileData[][] mapInput = new MapTileData[][]
     {
-        new MapTile[] 
+        new MapTileData[] 
         { 
-            new MapTile(0, EnumTileType.Wall), new MapTile(1, EnumTileType.Wall), 
-            new MapTile(2, EnumTileType.Wall), new MapTile(3, EnumTileType.Wall), 
-            new MapTile(4, EnumTileType.Wall), new MapTile(5, EnumTileType.Wall), 
-            new MapTile(6, EnumTileType.None), new MapTile(7, EnumTileType.None)
+            new MapTileData(0, EnumTileType.Wall), new MapTileData(1, EnumTileType.Wall), 
+            new MapTileData(2, EnumTileType.Wall), new MapTileData(3, EnumTileType.Wall), 
+            new MapTileData(4, EnumTileType.Wall), new MapTileData(5, EnumTileType.Wall), 
+            new MapTileData(6, EnumTileType.None), new MapTileData(7, EnumTileType.None)
         },
 
-        new MapTile[]
+        new MapTileData[]
         {
-            new MapTile(8, EnumTileType.Wall), new MapTile(9, EnumTileType.Target),
-            new MapTile(10, EnumTileType.Grass), new MapTile(11, EnumTileType.Grass),
-            new MapTile(12, EnumTileType.Grass), new MapTile(13, EnumTileType.Wall),
-            new MapTile(14, EnumTileType.Wall), new MapTile(15, EnumTileType.Wall)
+            new MapTileData(8, EnumTileType.Wall), new MapTileData(9, EnumTileType.Target),
+            new MapTileData(10, EnumTileType.Grass), new MapTileData(11, EnumTileType.Grass),
+            new MapTileData(12, EnumTileType.Grass), new MapTileData(13, EnumTileType.Wall),
+            new MapTileData(14, EnumTileType.Wall), new MapTileData(15, EnumTileType.Wall)
         },
 
-        new MapTile[]
+        new MapTileData[]
         {
-            new MapTile(16, EnumTileType.Wall), new MapTile(17, EnumTileType.Grass),
-            new MapTile(18, EnumTileType.Box), new MapTile(19, EnumTileType.Grass),
-            new MapTile(20, EnumTileType.Box), new MapTile(21, EnumTileType.Grass),
-            new MapTile(22, EnumTileType.Grass), new MapTile(23, EnumTileType.Wall)
+            new MapTileData(16, EnumTileType.Wall), new MapTileData(17, EnumTileType.Grass),
+            new MapTileData(18, EnumTileType.Box), new MapTileData(19, EnumTileType.Grass),
+            new MapTileData(20, EnumTileType.Box), new MapTileData(21, EnumTileType.Grass),
+            new MapTileData(22, EnumTileType.Grass), new MapTileData(23, EnumTileType.Wall)
         },
 
-        new MapTile[]
+        new MapTileData[]
         {
-            new MapTile(24, EnumTileType.Wall), new MapTile(25, EnumTileType.Grass),
-            new MapTile(26, EnumTileType.Target), new MapTile(27, EnumTileType.Wall),
-            new MapTile(28, EnumTileType.Player), new MapTile(29, EnumTileType.Grass),
-            new MapTile(30, EnumTileType.Grass), new MapTile(31, EnumTileType.Wall)
+            new MapTileData(24, EnumTileType.Wall), new MapTileData(25, EnumTileType.Grass),
+            new MapTileData(26, EnumTileType.Target), new MapTileData(27, EnumTileType.Wall),
+            new MapTileData(28, EnumTileType.Player), new MapTileData(29, EnumTileType.Grass),
+            new MapTileData(30, EnumTileType.Grass), new MapTileData(31, EnumTileType.Wall)
         },
 
-        new MapTile[]
+        new MapTileData[]
         {
-            new MapTile(32, EnumTileType.Wall), new MapTile(33, EnumTileType.Wall),
-            new MapTile(34, EnumTileType.Wall), new MapTile(35, EnumTileType.Wall),
-            new MapTile(36, EnumTileType.Wall), new MapTile(37, EnumTileType.Wall),
-            new MapTile(38, EnumTileType.Wall), new MapTile(39, EnumTileType.Wall)
+            new MapTileData(32, EnumTileType.Wall), new MapTileData(33, EnumTileType.Wall),
+            new MapTileData(34, EnumTileType.Wall), new MapTileData(35, EnumTileType.Wall),
+            new MapTileData(36, EnumTileType.Wall), new MapTileData(37, EnumTileType.Wall),
+            new MapTileData(38, EnumTileType.Wall), new MapTileData(39, EnumTileType.Wall)
         }
     };
     #endregion
@@ -108,7 +108,7 @@ public class MapController : MonoBehaviour
             {
                 int widthIndex = tile.PositionX + direction.X;
                 int heightIndex = Mathf.Abs(tile.PositionY - direction.Y);
-                neighbors.Add(mapInput[heightIndex][widthIndex]);
+                //neighbors.Add(mapInput[heightIndex][widthIndex]);
             }
         }
 
@@ -214,7 +214,7 @@ public class MapController : MonoBehaviour
                 mapInput[heightIndex][widthIndex].SetPosition(widthIndex * tileSize, -heightIndex * tileSize);
                 mapInput[heightIndex][widthIndex].RowIndex = heightIndex;
                 mapInput[heightIndex][widthIndex].ColumnIndex = widthIndex;
-                ProcessMapTile(mapInput[heightIndex][widthIndex].TileID, mapInput[heightIndex][widthIndex]);
+                //ProcessMapTile(mapInput[heightIndex][widthIndex].TileID, mapInput[heightIndex][widthIndex]);
 
             //    Debug.Log(string.Format("[{0}] x:{1} y:{2} bx:{3} by:{4}",
             //mapInput[heightIndex][widthIndex].TileID,
@@ -229,9 +229,11 @@ public class MapController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        PlaceTilesOnMap();
+        MapTileSpawner.Instance.CreateTileFromData(mapInput[0][0], 0 * tileSize, 0 * tileSize);
+        MapTileSpawner.Instance.CreateTileFromData(mapInput[1][1], 1 * tileSize, -1 * tileSize);
+        //PlaceTilesOnMap();-
 
-        SetNeighborsForEachTile();
+        //SetNeighborsForEachTile();
 
         //List<MapTile> playerNeighbors = FindTileNeighbors(mapInput[3][4]);
         //foreach (MapTile playerNeighbor in playerNeighbors)

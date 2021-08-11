@@ -1,44 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-public enum EnumTileType
-{
-    Wall,
-    Grass,
-    Box,
-    Target,
-    Player,
-    None
-};
-
-public interface ITile
-{
-    void PrepareTile(MapTileData tileData);
-
-    MapTile SpawnTile(int positionX, int positionY);
-
-    void SayHello();
-}
-
-public interface ITerrainTile : ITile
-{
-
-}
-
-public interface IMoveableTile : ITile
-{
-
-}
-
-public class MapTile : MonoBehaviour
+public class MapTileData
 {
     public int TileID;
     public bool IsTraversable = false;
     public bool IsPushable = false;
     public EnumTileType TileType;
 
-    protected int positionX;
+    private int positionX;
     public int PositionX
     {
         get => positionX;
@@ -48,7 +18,7 @@ public class MapTile : MonoBehaviour
         }
     }
 
-    protected int positionY;
+    private int positionY;
     public int PositionY
     {
         get => positionY;
@@ -58,7 +28,7 @@ public class MapTile : MonoBehaviour
         }
     }
 
-    protected int boundryX;
+    private int boundryX;
     public int BoundryX
     {
         get => boundryX;
@@ -68,7 +38,7 @@ public class MapTile : MonoBehaviour
         }
     }
 
-    protected int boundryY;
+    private int boundryY;
     public int BoundryY
     {
         get => boundryY;
@@ -78,7 +48,7 @@ public class MapTile : MonoBehaviour
         }
     }
 
-    protected int rowIndex;
+    private int rowIndex;
     public int RowIndex
     {
         get => rowIndex;
@@ -88,7 +58,7 @@ public class MapTile : MonoBehaviour
         }
     }
 
-    protected int columnIndex;
+    private int columnIndex;
     public int ColumnIndex
     {
         get => columnIndex;
@@ -98,7 +68,7 @@ public class MapTile : MonoBehaviour
         }
     }
 
-    public MapTile()
+    public MapTileData()
     {
         TileID = -1;
         IsTraversable = false;
@@ -110,7 +80,7 @@ public class MapTile : MonoBehaviour
         BoundryY = -1;
     }
 
-    public MapTile(int tileID, EnumTileType tileType)
+    public MapTileData(int tileID, EnumTileType tileType)
     {
         TileID = tileID;
         TileType = tileType;

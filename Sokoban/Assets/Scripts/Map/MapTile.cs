@@ -24,7 +24,7 @@ public interface ITerrainTile : ITile
 
 public interface IMoveableTile : ITile
 {
-
+    void MoveToAnotherTile(Vector3 tilePosition);
 }
 
 public class MapTile : MonoBehaviour, ITile
@@ -191,5 +191,7 @@ public class MapTile : MonoBehaviour, ITile
         PositionY = tileData.PositionY;
         BoundryX = tileData.BoundryX;
         BoundryY = tileData.BoundryY;
+        RowIndex = tileData.RowIndex;
+        ColumnIndex = tileData.ColumnIndex;
     }
 }

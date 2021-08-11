@@ -78,16 +78,22 @@ public class MapController : MonoBehaviour
         new NeighborsDirection(0, 1) //down
     };
 
-    #region Prefab properties (publicly exposed)
-    public TerrainTile wallTile;
-    public TerrainTile grassTile;
-    public TerrainTile boxTile;
-    public TerrainTile targetTile;
-    public PlayerTerrainTile playerTile;
-    public TerrainTile emptyTile;
-    #endregion
+    //#region Prefab properties (publicly exposed)
+    //public TerrainTile wallTile;
+    //public TerrainTile grassTile;
+    //public TerrainTile boxTile;
+    //public TerrainTile targetTile;
+    //public PlayerTerrainTile playerTile;
+    //public TerrainTile emptyTile;
+    //#endregion
 
     private PlayerTerrainTile PlayerTileReference;
+    private MovableTile PlayerReference;
+
+    public MovableTile GetPlayerTile()
+    {
+        return PlayerReference;
+    }
 
     bool IsNeighborInsideTheMap(MapTile tile, NeighborsDirection direction)
     {
@@ -108,7 +114,10 @@ public class MapController : MonoBehaviour
             {
                 int widthIndex = tile.PositionX + direction.X;
                 int heightIndex = Mathf.Abs(tile.PositionY - direction.Y);
-                //neighbors.Add(mapInput[heightIndex][widthIndex]);
+
+                //TODO: Comment on this (explain the "magic number")
+                int CalculatedTileID = heightIndex * mapWidth + widthIndex;
+                neighbors.Add(ProcessedTiles[CalculatedTileID]);
             }
         }
 
@@ -140,7 +149,7 @@ public class MapController : MonoBehaviour
     {
         List<MapTile> neighbors = new List<MapTile>();
 
-        if(TileNeighbors.TryGetValue(PlayerTileReference.CurrentTileID, out neighbors))
+        if(TileNeighbors.TryGetValue(PlayerReference.CurrentTileID, out neighbors))
         {
             return neighbors;
         }
@@ -153,20 +162,20 @@ public class MapController : MonoBehaviour
         ProcessedTiles.Add(tileID, tile);
     }
 
-    TerrainTile PlaceTile(TerrainTile tile, int tileID, float positionX, float positionY, float positionZ = 0)
-    {
-        TerrainTile terrainTile = Instantiate(tile, new Vector3(positionX, positionY, positionZ), Quaternion.identity);
-        terrainTile.TileID = tileID;
-        PlacedTiles.Add(terrainTile);
-        return terrainTile;
-    }
+    //TerrainTile PlaceTile(TerrainTile tile, int tileID, float positionX, float positionY, float positionZ = 0)
+    //{
+    //    TerrainTile terrainTile = Instantiate(tile, new Vector3(positionX, positionY, positionZ), Quaternion.identity);
+    //    terrainTile.TileID = tileID;
+    //    PlacedTiles.Add(terrainTile);
+    //    return terrainTile;
+    //}
 
-    PlayerTerrainTile PlacePlayerTile(PlayerTerrainTile tile, int tileID, float positionX, float positionY, float positionZ = 0)
-    {
-        PlayerTerrainTile playerTile = Instantiate(tile, new Vector3(positionX, positionY, positionZ), Quaternion.identity);
-        playerTile.CurrentTileID = playerTile.TileID = tileID;
-        return playerTile;
-    }
+    //PlayerTerrainTile PlacePlayerTile(PlayerTerrainTile tile, int tileID, float positionX, float positionY, float positionZ = 0)
+    //{
+    //    PlayerTerrainTile playerTile = Instantiate(tile, new Vector3(positionX, positionY, positionZ), Quaternion.identity);
+    //    playerTile.CurrentTileID = playerTile.TileID = tileID;
+    //    return playerTile;
+    //}
 
     void PlaceTilesOnMap()
     {
@@ -181,13 +190,6 @@ public class MapController : MonoBehaviour
 
                 var mapTile = MapTileSpawner.Instance.CreateTileFromData(mapInput[heightIndex][widthIndex], widthIndex * tileSize, -heightIndex * tileSize);
                 ProcessMapTile(mapTile.TileID, mapTile);
-
-            //    Debug.Log(string.Format("[{0}] x:{1} y:{2} bx:{3} by:{4}",
-            //mapTile.TileID,
-            //mapTile.PositionX,
-            //mapTile.PositionY,
-            //mapTile.BoundryX,
-            //mapTile.BoundryY));
             }
         }
     }
@@ -195,12 +197,12 @@ public class MapController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //MapTileSpawner.Instance.CreateTileFromData(mapInput[0][0], 0 * tileSize, 0 * tileSize);
-        //MapTileSpawner.Instance.CreateTileFromData(mapInput[1][1], 1 * tileSize, -1 * tileSize);
         PlaceTilesOnMap();
 
-        //SetNeighborsForEachTile();
+        SetNeighborsForEachTile();
 
+        PlayerReference = (MovableTile)ProcessedTiles[MapTileSpawner.Instance.PlayerStartingTileID];
+        Debug.Log("So far so good.");
         //List<MapTile> playerNeighbors = FindTileNeighbors(mapInput[3][4]);
         //foreach (MapTile playerNeighbor in playerNeighbors)
         //{
@@ -211,26 +213,26 @@ public class MapController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.RightArrow) && !inputBlocked)
-        {
-            inputBlocked = true;
-            TryMoveRight(Time.deltaTime);
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow) && !inputBlocked)
-        {
-            inputBlocked = true;
-            TryMoveLeft(Time.deltaTime);
-        }
-        else if (Input.GetKeyDown(KeyCode.UpArrow) && !inputBlocked)
-        {
-            inputBlocked = true;
-            TryMoveUp(Time.deltaTime);
-        }
-        else if (Input.GetKeyDown(KeyCode.DownArrow) && !inputBlocked)
-        {
-            inputBlocked = true;
-            TryMoveDown(Time.deltaTime);
-        }
+        //if(Input.GetKeyDown(KeyCode.RightArrow) && !inputBlocked)
+        //{
+        //    inputBlocked = true;
+        //    TryMoveRight(Time.deltaTime);
+        //}
+        //else if (Input.GetKeyDown(KeyCode.LeftArrow) && !inputBlocked)
+        //{
+        //    inputBlocked = true;
+        //    TryMoveLeft(Time.deltaTime);
+        //}
+        //else if (Input.GetKeyDown(KeyCode.UpArrow) && !inputBlocked)
+        //{
+        //    inputBlocked = true;
+        //    TryMoveUp(Time.deltaTime);
+        //}
+        //else if (Input.GetKeyDown(KeyCode.DownArrow) && !inputBlocked)
+        //{
+        //    inputBlocked = true;
+        //    TryMoveDown(Time.deltaTime);
+        //}
     }
 
     public static bool AlmostEqual(Vector3 v1, Vector3 v2, float precision)
@@ -245,6 +247,13 @@ public class MapController : MonoBehaviour
     }
 
     bool inputBlocked = false;
+
+    //for testing
+    public Vector3 GetNextPositionTest()
+    {
+        MapTile nextTile = ProcessedTiles[29];
+        return new Vector3(nextTile.PositionX, nextTile.PositionY, -1);
+    }
 
     void MovePlayer(Vector3 position)
     {
@@ -268,10 +277,10 @@ public class MapController : MonoBehaviour
     IEnumerator MovePlayerCoroutine(Vector3 position, MapTile neighbor, float moveTime = 1.5f)
     {
         float elapsedTime = 0.0f;
-        while (!AlmostEqual(PlayerTileReference.transform.position, position, 0.01f))
+        while (!AlmostEqual(PlayerReference.transform.position, position, 0.01f))
         {
-            PlayerTileReference.transform.position = Vector3.Lerp(
-            PlayerTileReference.transform.position,
+            PlayerReference.transform.position = Vector3.Lerp(
+            PlayerReference.transform.position,
             position,
             (elapsedTime / moveTime)
             );
@@ -281,10 +290,10 @@ public class MapController : MonoBehaviour
             //yield return new WaitForSeconds(0.01f);
         }
 
-        if (AlmostEqual(PlayerTileReference.transform.position, position, 0.01f))
+        if (AlmostEqual(PlayerReference.transform.position, position, 0.01f))
         {
             //Debug.Log("Change ID");
-            PlayerTileReference.CurrentTileID = neighbor.TileID;
+            PlayerReference.CurrentTileID = neighbor.TileID;
         }
         inputBlocked = false;
         yield return null;
@@ -332,7 +341,7 @@ public class MapController : MonoBehaviour
         List<MapTile> playerNeighbors = GetPlayerNeighbors();
         foreach(MapTile neighbor in playerNeighbors)
         {
-            if(neighbor.TileID == PlayerTileReference.CurrentTileID + 1 &&
+            if(neighbor.TileID == PlayerReference.CurrentTileID + 1 &&
                 neighbor.IsTraversable)
             {
                 Vector3 newPosition = new Vector3(neighbor.PositionX, neighbor.PositionY, -1);
@@ -348,7 +357,7 @@ public class MapController : MonoBehaviour
                 //}
                 StartCoroutine(MovePlayerCoroutine(newPosition, neighbor));
             }
-            else if (neighbor.TileID == PlayerTileReference.CurrentTileID + 1 &&
+            else if (neighbor.TileID == PlayerReference.CurrentTileID + 1 &&
                 neighbor.IsPushable)
             {
                 //Check if neighbor can be moved up

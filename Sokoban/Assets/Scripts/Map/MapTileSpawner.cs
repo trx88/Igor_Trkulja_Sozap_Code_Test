@@ -35,6 +35,12 @@ public class MapTileSpawner : MonoBehaviour
         }
     }
 
+    private int playerStartingTileID;
+    public int PlayerStartingTileID
+    {
+        get => playerStartingTileID;
+    }
+
     EnumTileType TileType;
 
     TileSpawner Spawner;
@@ -73,6 +79,7 @@ public class MapTileSpawner : MonoBehaviour
                     Spawner = new TileSpawner(ScriptableObject.CreateInstance<TerrainTileSpawner>());
                     Spawner.AnyTileSpawner.SpawnTile(tileData, grassTile, positionX, positionY, grassTileZ);
 
+                    playerStartingTileID = tileData.TileID;
                     Spawner = new TileSpawner(ScriptableObject.CreateInstance<MovableTileSpawner>());
                     return Spawner.AnyTileSpawner.SpawnTile(tileData, playerTile, positionX, positionY, playerTileZ);
                 }

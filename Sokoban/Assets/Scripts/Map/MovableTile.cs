@@ -2,21 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovableTile : MapTile, ITile
+public class MovableTile : MapTile, IMoveableTile
 {
     public void PrepareTile(MapTileData tileData)
     {
-        throw new System.NotImplementedException();
-    }
-
-    public void SayHello()
-    {
-        Debug.Log("I'm a movable tile");
-    }
-
-    public MapTile SpawnTile(int positionX, int positionY)
-    {
-        throw new System.NotImplementedException();
+        base.PrepareTile(tileData);
     }
 
     // Start is called before the first frame update

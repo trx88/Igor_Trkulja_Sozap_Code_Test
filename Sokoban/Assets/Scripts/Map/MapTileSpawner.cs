@@ -4,16 +4,24 @@ using UnityEngine;
 
 public class MapTileSpawner : MonoBehaviour
 {
-    private static MapTileSpawner instance;
+    #region Publicly exposed properties
+    public int boxTileZ = -1;
+    public int playerTileZ = -1;
+    public int wallTileZ = 0;
+    public int grassTileZ = 1;
+    public int targetTileZ = 0;
 
-    public static MapTileSpawner Instance { get { return instance; } }
-
-    public TerrainTile boxTile;
-    public PlayerTerrainTile playerTile;
+    public MovableTile boxTile;
+    public MovableTile playerTile;
     public TerrainTile wallTile;
     public TerrainTile grassTile;
     public TerrainTile targetTile;
     public TerrainTile emptyTile;
+    #endregion
+
+    private static MapTileSpawner instance;
+
+    public static MapTileSpawner Instance { get { return instance; } }
 
     private void Awake()
     {
@@ -29,115 +37,121 @@ public class MapTileSpawner : MonoBehaviour
 
     EnumTileType TileType;
 
-    TerrainTileSpawner Spawner;
-
-    public void CreateTile(ITile tile)
-    {
-        tile.SayHello();
-    }
+    TileSpawner Spawner;
 
     public MapTile CreateTileFromData(MapTileData tileData, int positionX, int positionY)
     {
         TileType = tileData.TileType;
 
-        switch(TileType)
+        switch (TileType)
         {
             case EnumTileType.Wall:
                 {
-                    Spawner = new TerrainTileSpawner(ScriptableObject.CreateInstance<WallTileSpawner>());
-                    return Spawner.SpawnTile(tileData, wallTile, positionX, positionY);
+                    Spawner = new TileSpawner(ScriptableObject.CreateInstance<TerrainTileSpawner>());
+                    return Spawner.AnyTileSpawner.SpawnTile(tileData, wallTile, positionX, positionY, wallTileZ);
                 }
-                break;
             case EnumTileType.Grass:
                 {
-                    Spawner = new TerrainTileSpawner(ScriptableObject.CreateInstance<GrassTileSpawner>());
-                    return Spawner.SpawnTile(tileData, grassTile, positionX, positionY);
+                    Spawner = new TileSpawner(ScriptableObject.CreateInstance<TerrainTileSpawner>());
+                    return Spawner.AnyTileSpawner.SpawnTile(tileData, grassTile, positionX, positionY, grassTileZ);
                 }
-                break;
-            //case EnumTileType.Box:
-            //    {
+            case EnumTileType.Box:
+                {
+                    Spawner = new TileSpawner(ScriptableObject.CreateInstance<TerrainTileSpawner>());
+                    Spawner.AnyTileSpawner.SpawnTile(tileData, grassTile, positionX, positionY, grassTileZ);
                     
-            //    }
-            //    break;
+                    Spawner = new TileSpawner(ScriptableObject.CreateInstance<MovableTileSpawner>());
+                    return Spawner.AnyTileSpawner.SpawnTile(tileData, boxTile, positionX, positionY, boxTileZ);
+                }
             case EnumTileType.Target:
                 {
-                    Spawner = new TerrainTileSpawner(ScriptableObject.CreateInstance<TargetTileSpawner>());
-                    return Spawner.SpawnTile(tileData, targetTile, positionX, positionY);
+                    Spawner = new TileSpawner(ScriptableObject.CreateInstance<TerrainTileSpawner>());
+                    return Spawner.AnyTileSpawner.SpawnTile(tileData, targetTile, positionX, positionY, targetTileZ);
                 }
-                break;
-            //case EnumTileType.Player:
-            //    {
-                    
-            //    }
-            //    break;
-            //case EnumTileType.None:
-            //    {
-                    
-            //    }
-            //    break;
+            case EnumTileType.Player:
+                {
+                    Spawner = new TileSpawner(ScriptableObject.CreateInstance<TerrainTileSpawner>());
+                    Spawner.AnyTileSpawner.SpawnTile(tileData, grassTile, positionX, positionY, grassTileZ);
+
+                    Spawner = new TileSpawner(ScriptableObject.CreateInstance<MovableTileSpawner>());
+                    return Spawner.AnyTileSpawner.SpawnTile(tileData, playerTile, positionX, positionY, playerTileZ);
+                }
+            case EnumTileType.None:
+                {
+                    Spawner = new TileSpawner(ScriptableObject.CreateInstance<TerrainTileSpawner>());
+                    return Spawner.AnyTileSpawner.SpawnTile(tileData, emptyTile, positionX, positionY, 0);
+                }
+            default:
+                {
+                    return new MapTile();
+                }
         }
-
-        return new MapTile();
-    }
-}
-
-public class TerrainTileSpawner
-{
-    ITileSpawner TileSpawner;
-
-    public TerrainTileSpawner()
-    {
-
-    }
-
-    public TerrainTileSpawner(ITileSpawner tileSpawner)
-    {
-        TileSpawner = tileSpawner;
-    }
-
-    public MapTile SpawnTile(MapTileData tileData, TerrainTile terrainTilePrefab, int positionX, int positionY)
-    {
-        return TileSpawner.SpawnTile(tileData, terrainTilePrefab, positionX, positionY);
     }
 }
 
 public interface ITileSpawner
 {
-    public MapTile SpawnTile(MapTileData tileData, TerrainTile terrainTilePrefab, int positionX, int positionY);
+    public MapTile SpawnTile(MapTileData tileData, TerrainTile terrainTilePrefab, int positionX, int positionY, int positionZ);
+
+    public MapTile SpawnTile(MapTileData tileData, MovableTile movableTilePrefab, int positionX, int positionY, int positionZ);
 }
 
-public class GrassTileSpawner : ScriptableObject, ITileSpawner
+public interface ITerrainTileSpawner : ITileSpawner
 {
-    private const int tileZHeigh = 1;
+    public new MapTile SpawnTile(MapTileData tileData, TerrainTile terrainTilePrefab, int positionX, int positionY, int positionZ);
+}
 
-    public MapTile SpawnTile(MapTileData tileData, TerrainTile terrainTilePrefab, int positionX, int positionY)
+public interface IMovableTileSpawner : ITileSpawner
+{
+    public new MapTile SpawnTile(MapTileData tileData, MovableTile movableTilePrefab, int positionX, int positionY, int positionZ);
+}
+
+public class TileSpawner
+{
+    private ITileSpawner anyTileSpawner;
+    public ITileSpawner AnyTileSpawner
     {
-        var grassTile = Instantiate(terrainTilePrefab, new Vector3(positionX, positionY, 1), Quaternion.identity);
-        grassTile.PrepareTile(tileData);
-        return grassTile;
+        get => anyTileSpawner;
+    }
+
+
+    public TileSpawner()
+    {
+
+    }
+
+    public TileSpawner(ITileSpawner tileSpawner)
+    {
+        anyTileSpawner = tileSpawner;
     }
 }
 
-public class WallTileSpawner : ScriptableObject, ITileSpawner
+public class TerrainTileSpawner : ScriptableObject, ITerrainTileSpawner
 {
-    private const int tileZHeigh = 0;
-
-    public MapTile SpawnTile(MapTileData tileData, TerrainTile terrainTilePrefab, int positionX, int positionY)
+    public MapTile SpawnTile(MapTileData tileData, TerrainTile terrainTilePrefab, int positionX, int positionY, int positionZ)
     {
-        var wallTile = Instantiate(terrainTilePrefab, new Vector3(positionX, positionY, 0), Quaternion.identity);
-        wallTile.PrepareTile(tileData);
-        return wallTile;
+        var terrainTile = Instantiate(terrainTilePrefab, new Vector3(positionX, positionY, positionZ), Quaternion.identity);
+        terrainTile.PrepareTile(tileData);
+        return terrainTile;
+    }
+
+    public MapTile SpawnTile(MapTileData tileData, MovableTile movableTilePrefab, int positionX, int positionY, int positionZ)
+    {
+        throw new System.NotImplementedException();
     }
 }
 
-public class TargetTileSpawner : ScriptableObject, ITileSpawner
+public class MovableTileSpawner : ScriptableObject, IMovableTileSpawner
 {
-    private const int tileZHeigh = 0;
-
-    public MapTile SpawnTile(MapTileData tileData, TerrainTile terrainTilePrefab, int positionX, int positionY)
+    public MapTile SpawnTile(MapTileData tileData, TerrainTile terrainTilePrefab, int positionX, int positionY, int positionZ)
     {
-        var targetTile = Instantiate(terrainTilePrefab, new Vector3(positionX, positionY, tileZHeigh), Quaternion.identity);
-        targetTile.PrepareTile(tileData);
-        return targetTile;
+        throw new System.NotImplementedException();
+    }
+
+    public MapTile SpawnTile(MapTileData tileData, MovableTile movableTilePrefab, int positionX, int positionY, int positionZ)
+    {
+        var movableTile = Instantiate(movableTilePrefab, new Vector3(positionX, positionY, positionZ), Quaternion.identity);
+        movableTile.PrepareTile(tileData);
+        return movableTile;
     }
 }

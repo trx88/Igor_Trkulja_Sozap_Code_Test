@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2202820678399755780}
   - component: {fileID: 2202820678399755779}
-  - component: {fileID: -4658909341757354249}
+  - component: {fileID: -4263639279442108871}
   m_Layer: 0
   m_Name: TileBoxPrefab
   m_TagString: Untagged
@@ -83,7 +83,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-4658909341757354249
+--- !u!114 &-4263639279442108871
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -92,6 +92,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2202820678399755778}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd9bf8d88eea87049836aa046b4106fb, type: 3}
+  m_Script: {fileID: 11500000, guid: 54b9c9cb2ee7dd34a9967838e993062e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TileID: -1
+  IsTraversable: 0
+  IsPushable: 0
+  TileType: 5

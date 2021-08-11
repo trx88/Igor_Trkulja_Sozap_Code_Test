@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerTerrainTile : MapTile, IMoveableTile
+public class PlayerTerrainTile : MovableTile, IMoveableTile
 {
     private int currentTileID;
     public int CurrentTileID

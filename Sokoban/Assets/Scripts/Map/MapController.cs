@@ -174,54 +174,20 @@ public class MapController : MonoBehaviour
         {
             for (int widthIndex = 0; widthIndex < mapInput[heightIndex].Length; widthIndex++)
             {
-                switch (mapInput[heightIndex][widthIndex].TileType)
-                {
-                    case EnumTileType.Wall:
-                        {
-                            PlaceTile(wallTile, mapInput[heightIndex][widthIndex].TileID, widthIndex * tileSize, -heightIndex * tileSize);
-                        }
-                        break;
-                    case EnumTileType.Grass:
-                        {
-                            PlaceTile(grassTile, mapInput[heightIndex][widthIndex].TileID, widthIndex * tileSize, -heightIndex * tileSize);
-                        }
-                        break;
-                    case EnumTileType.Box:
-                        {
-                            PlaceTile(boxTile, mapInput[heightIndex][widthIndex].TileID, widthIndex * tileSize, -heightIndex * tileSize, -1);
-                            Instantiate(grassTile, new Vector3(widthIndex * tileSize, -heightIndex * tileSize, 10), Quaternion.identity);
-                        }
-                        break;
-                    case EnumTileType.Target:
-                        {
-                            PlaceTile(targetTile, mapInput[heightIndex][widthIndex].TileID, widthIndex * tileSize, -heightIndex * tileSize);
-                        }
-                        break;
-                    case EnumTileType.Player:
-                        {
-                            //Place grass tile instead, since player can only start on grass tile. 
-                            PlaceTile(grassTile, mapInput[heightIndex][widthIndex].TileID, widthIndex * tileSize, -heightIndex * tileSize, 1);
-                            //TODO: Add player to the map (player tile should live here, and use player controller to send "signals" to move it???)
-                            PlayerTileReference = PlacePlayerTile(playerTile, mapInput[heightIndex][widthIndex].TileID, widthIndex * tileSize, -heightIndex * tileSize, -1);
-                        }
-                        break;
-                    case EnumTileType.None:
-                        {
-                            PlaceTile(emptyTile, mapInput[heightIndex][widthIndex].TileID, widthIndex * tileSize, -heightIndex * tileSize);
-                        }
-                        break;
-                }
+                //TODO: get rid of this
                 mapInput[heightIndex][widthIndex].SetPosition(widthIndex * tileSize, -heightIndex * tileSize);
                 mapInput[heightIndex][widthIndex].RowIndex = heightIndex;
                 mapInput[heightIndex][widthIndex].ColumnIndex = widthIndex;
-                //ProcessMapTile(mapInput[heightIndex][widthIndex].TileID, mapInput[heightIndex][widthIndex]);
+
+                var mapTile = MapTileSpawner.Instance.CreateTileFromData(mapInput[heightIndex][widthIndex], widthIndex * tileSize, -heightIndex * tileSize);
+                ProcessMapTile(mapTile.TileID, mapTile);
 
             //    Debug.Log(string.Format("[{0}] x:{1} y:{2} bx:{3} by:{4}",
-            //mapInput[heightIndex][widthIndex].TileID,
-            //mapInput[heightIndex][widthIndex].PositionX,
-            //mapInput[heightIndex][widthIndex].PositionY,
-            //mapInput[heightIndex][widthIndex].BoundryX,
-            //mapInput[heightIndex][widthIndex].BoundryY));
+            //mapTile.TileID,
+            //mapTile.PositionX,
+            //mapTile.PositionY,
+            //mapTile.BoundryX,
+            //mapTile.BoundryY));
             }
         }
     }
@@ -229,9 +195,9 @@ public class MapController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        MapTileSpawner.Instance.CreateTileFromData(mapInput[0][0], 0 * tileSize, 0 * tileSize);
-        MapTileSpawner.Instance.CreateTileFromData(mapInput[1][1], 1 * tileSize, -1 * tileSize);
-        //PlaceTilesOnMap();-
+        //MapTileSpawner.Instance.CreateTileFromData(mapInput[0][0], 0 * tileSize, 0 * tileSize);
+        //MapTileSpawner.Instance.CreateTileFromData(mapInput[1][1], 1 * tileSize, -1 * tileSize);
+        PlaceTilesOnMap();
 
         //SetNeighborsForEachTile();
 

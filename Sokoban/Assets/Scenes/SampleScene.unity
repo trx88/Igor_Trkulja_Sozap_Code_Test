@@ -234,9 +234,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wallTile: {fileID: -5631198339147605759, guid: 6672009008c48b9408977346f7188c4f, type: 3}
   grassTile: {fileID: -4230021439479643723, guid: 9de56018022716444b9c7339440eba0a, type: 3}
-  boxTile: {fileID: -4658909341757354249, guid: 3a7130d0024cc394f8254cecca32fefc, type: 3}
+  boxTile: {fileID: 0}
   targetTile: {fileID: -1410942225108715069, guid: f9a528933a796b842840a95b60ec76f3, type: 3}
-  playerTile: {fileID: 2469491233717342455, guid: d7a014f6a82eb5e45bf7cc66b841dd5e, type: 3}
+  playerTile: {fileID: 0}
   emptyTile: {fileID: -2625107653663858762, guid: 3ba92ffee07c3b74ea07ca1fec0ac404, type: 3}
 --- !u!4 &430962726
 Transform:
@@ -264,8 +264,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75135c52943d32f408877bbe43b673db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boxTile: {fileID: -4658909341757354249, guid: 3a7130d0024cc394f8254cecca32fefc, type: 3}
-  playerTile: {fileID: 2469491233717342455, guid: d7a014f6a82eb5e45bf7cc66b841dd5e, type: 3}
+  boxTile: {fileID: -4263639279442108871, guid: 3a7130d0024cc394f8254cecca32fefc, type: 3}
+  playerTile: {fileID: 7449036306777158222, guid: d7a014f6a82eb5e45bf7cc66b841dd5e, type: 3}
   wallTile: {fileID: -5631198339147605759, guid: 6672009008c48b9408977346f7188c4f, type: 3}
   grassTile: {fileID: -4230021439479643723, guid: 9de56018022716444b9c7339440eba0a, type: 3}
   targetTile: {fileID: -1410942225108715069, guid: f9a528933a796b842840a95b60ec76f3, type: 3}

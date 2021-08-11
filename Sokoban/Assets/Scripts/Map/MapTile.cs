@@ -15,10 +15,6 @@ public enum EnumTileType
 public interface ITile
 {
     void PrepareTile(MapTileData tileData);
-
-    MapTile SpawnTile(int positionX, int positionY);
-
-    void SayHello();
 }
 
 public interface ITerrainTile : ITile
@@ -31,7 +27,7 @@ public interface IMoveableTile : ITile
 
 }
 
-public class MapTile : MonoBehaviour
+public class MapTile : MonoBehaviour, ITile
 {
     public int TileID;
     public bool IsTraversable = false;
@@ -183,5 +179,17 @@ public class MapTile : MonoBehaviour
         TileType = EnumTileType.Box;
         IsTraversable = false;
         IsPushable = true;
+    }
+
+    public void PrepareTile(MapTileData tileData)
+    {
+        TileID = tileData.TileID;
+        IsTraversable = tileData.IsTraversable;
+        IsPushable = tileData.IsPushable;
+        TileType = tileData.TileType;
+        PositionX = tileData.PositionX;
+        PositionY = tileData.PositionY;
+        BoundryX = tileData.BoundryX;
+        BoundryY = tileData.BoundryY;
     }
 }

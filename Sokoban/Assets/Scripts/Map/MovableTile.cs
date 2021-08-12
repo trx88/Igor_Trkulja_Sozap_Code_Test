@@ -1,23 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class MovableTile : MapTile, IMoveableTile
 {
-    private int currentTileID;
-    public int CurrentTileID
-    {
-        get => currentTileID;
-        set
-        {
-            currentTileID = value;
-        }
-    }
-
     public void PrepareTile(MapTileData tileData)
     {
         base.PrepareTile(tileData);
-        currentTileID = tileData.TileID;
     }
 
     public static bool AlmostEqual(Vector3 v1, Vector3 v2, float precision)
@@ -43,49 +35,107 @@ public class MovableTile : MapTile, IMoveableTile
         
     }
 
-    IEnumerator MovePlayerCoroutine(Vector3 position, float moveTime = 1.5f)
+    public Task MoveToAnotherTile(Vector3 tilePosition)
     {
-        float elapsedTime = 0.0f;
-        while (!AlmostEqual(transform.position, position, 0.01f))
-        {
-            transform.position = Vector3.Lerp(
-            transform.position,
-            position,
-            (elapsedTime / moveTime)
-            );
-            //elapsedTime += 0.01f;
-            elapsedTime += Time.fixedDeltaTime;
-            yield return null;
-            //yield return new WaitForSeconds(0.01f);
-        }
+        throw new NotImplementedException();
     }
 
-    public void MoveToAnotherTile(Vector3 tilePosition)
-    {
-        //transform.position = tilePosition;
-        //StartCoroutine(MovePlayerCoroutine(tilePosition));
-        while (!AlmostEqual(transform.position, tilePosition, 0.01f))
-        {
-            transform.position = Vector3.MoveTowards(
-            transform.position,
-            tilePosition,
-            0.1f
-            );
-        }
-    }
+    //public bool movementDone = false;
 
-    public bool MoveToAnotherTileBool(Vector3 tilePosition)
-    {
-        //transform.position = tilePosition;
-        //StartCoroutine(MovePlayerCoroutine(tilePosition));
-        while (!AlmostEqual(transform.position, tilePosition, 0.01f))
-        {
-            transform.position = Vector3.MoveTowards(
-            transform.position,
-            tilePosition,
-            0.1f
-            );
-        }
-        return true;
-    }
+    //IEnumerator MovePlayerCoroutine(Vector3 position, float moveTime = 2.0f)
+    //{
+    //    movementDone = false;
+    //    float elapsedTime = 0.0f;
+    //    while (!AlmostEqual(transform.position, position, 0.01f))
+    //    {
+    //        transform.position = Vector3.Lerp(
+    //        transform.position,
+    //        position,
+    //        (elapsedTime / moveTime)
+    //        );
+    //        elapsedTime += 0.01f;
+    //        //elapsedTime += Time.fixedDeltaTime;
+    //        yield return new WaitForSeconds(0.01f);
+    //        //yield return new WaitForSeconds(0.01f);
+    //    }
+    //    Debug.Log("Stopped moving.");
+    //    movementDone = true;
+    //    yield return null;
+    //}
+
+    //public async Task Test(Vector3 tilePosition)
+    //{
+    //    //await new WaitForSeconds(1.0f);
+    //    Debug.Log("Wait for coroutine.");
+    //    //await StartCoroutine(TestCoroutine());
+    //    await StartCoroutine(MovePlayerCoroutine(tilePosition));
+    //    Debug.Log("Waiting done.");
+    //}
+
+    //public async Task MoveToAnotherTile(Vector3 tilePosition)
+    //{
+    //    //transform.position = tilePosition;
+
+    //    //StartCoroutine(MovePlayerCoroutine(tilePosition));
+
+    //    await Test(tilePosition);
+
+    //    //while (!AlmostEqual(transform.position, tilePosition, 0.01f))
+    //    //{
+    //    //    transform.position = Vector3.MoveTowards(
+    //    //    transform.position,
+    //    //    tilePosition,
+    //    //    0.1f
+    //    //    );
+    //    //}
+    //}
+
+    //public bool MoveToAnotherTileBool(Vector3 tilePosition)
+    //{
+    //    //transform.position = tilePosition;
+    //    //StartCoroutine(MovePlayerCoroutine(tilePosition));
+    //    while (!AlmostEqual(transform.position, tilePosition, 0.01f))
+    //    {
+    //        transform.position = Vector3.MoveTowards(
+    //        transform.position,
+    //        tilePosition,
+    //        0.1f
+    //        );
+    //    }
+    //    return true;
+    //}
 }
+
+//public static class AwaitExtensions
+//{
+//    public static TaskAwaiter GetAwaiter(this TimeSpan timeSpan)
+//    {
+//        return Task.Delay(timeSpan).GetAwaiter();
+//    }
+
+//    public static TaskAwaiter GetAwaiter(this IEnumerator enumerator)
+//    {
+//        return Task.Delay(1).GetAwaiter();
+//    }
+
+//    public static TaskAwaiter GetAwaiter(this Coroutine coroutine)
+//    {
+//        return Task.Delay(1000).GetAwaiter();
+//    }
+//}
+
+//public static class TaskExtensions
+//{
+//    public static IEnumerator AsIEnumerator(this Task task)
+//    {
+//        while (!task.IsCompleted)
+//        {
+//            yield return null;
+//        }
+
+//        if (task.IsFaulted)
+//        {
+//            throw task.Exception;
+//        }
+//    }
+//}

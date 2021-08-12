@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public enum EnumTileType
@@ -24,11 +25,21 @@ public interface ITerrainTile : ITile
 
 public interface IMoveableTile : ITile
 {
-    void MoveToAnotherTile(Vector3 tilePosition);
+    Task MoveToAnotherTile(Vector3 tilePosition);
 }
 
 public class MapTile : MonoBehaviour, ITile
 {
+    private int currentTileID;
+    public int CurrentTileID
+    {
+        get => currentTileID;
+        set
+        {
+            currentTileID = value;
+        }
+    }
+
     public int TileID;
     public bool IsTraversable = false;
     public bool IsPushable = false;
@@ -181,9 +192,43 @@ public class MapTile : MonoBehaviour, ITile
         IsPushable = true;
     }
 
+    public void TurnInto(EnumTileType tileType)
+    {
+        switch (tileType)
+        {
+            case EnumTileType.Grass:
+                {
+                    TileType = EnumTileType.Grass;
+                    IsTraversable = true;
+                    IsPushable = false;
+                }
+                break;
+            case EnumTileType.Box:
+                {
+                    TileType = EnumTileType.Box;
+                    IsTraversable = false;
+                    IsPushable = true;
+                }
+                break;
+            case EnumTileType.Target:
+                {
+                    TileType = EnumTileType.Target;
+                    IsTraversable = true;
+                    IsPushable = false;
+                }
+                break;
+            default:
+                {
+                    IsTraversable = false;
+                    IsPushable = false;
+                }
+                break;
+        }
+    }
+
     public void PrepareTile(MapTileData tileData)
     {
-        TileID = tileData.TileID;
+        currentTileID = TileID = tileData.TileID;
         IsTraversable = tileData.IsTraversable;
         IsPushable = tileData.IsPushable;
         TileType = tileData.TileType;

@@ -14,6 +14,14 @@ public struct NeighborsDirection
     }
 }
 
+public enum EnumMovementDirection
+{
+    Right,
+    Left,
+    Up,
+    Down
+}
+
 public class MapController : MonoBehaviour
 {
     private const int tileSize = 1;
@@ -68,6 +76,7 @@ public class MapController : MonoBehaviour
 
     private Dictionary<int, MapTile> ProcessedTiles = new Dictionary<int, MapTile>();
     private List<TerrainTile> PlacedTiles = new List<TerrainTile>();
+    private List<MapTile> MapTiles = new List<MapTile>();
     private Dictionary<int, List<MapTile>> TileNeighbors = new Dictionary<int, List<MapTile>>();
 
     private List<NeighborsDirection> Directions = new List<NeighborsDirection>()
@@ -87,12 +96,32 @@ public class MapController : MonoBehaviour
     //public TerrainTile emptyTile;
     //#endregion
 
-    private PlayerTerrainTile PlayerTileReference;
-    private MovableTile PlayerReference;
+    private PlayerTerrainTile PlayerReference;
 
-    public MovableTile GetPlayerTile()
+    public PlayerTerrainTile GetPlayerTile()
     {
         return PlayerReference;
+    }
+
+    int CalculateMapOffsetForMovement(EnumMovementDirection movementDirection)
+    {
+        switch (movementDirection)
+        {
+            case EnumMovementDirection.Right:
+                return 1;
+                break;
+            case EnumMovementDirection.Left:
+                return -1;
+                break;
+            case EnumMovementDirection.Up:
+                return -mapWidth;
+                break;
+            case EnumMovementDirection.Down:
+                return mapWidth;
+                break;
+            default: return 0;
+                break;
+        }
     }
 
     bool IsNeighborInsideTheMap(MapTile tile, NeighborsDirection direction)
@@ -126,7 +155,7 @@ public class MapController : MonoBehaviour
 
     void SetNeighborsForEachTile()
     {
-        foreach(MapTile tile in ProcessedTiles.Values)
+        foreach (MapTile tile in ProcessedTiles.Values)
         {
             var neighbours = FindTileNeighbors(tile);
             TileNeighbors.Add(tile.TileID, neighbours);
@@ -162,21 +191,6 @@ public class MapController : MonoBehaviour
         ProcessedTiles.Add(tileID, tile);
     }
 
-    //TerrainTile PlaceTile(TerrainTile tile, int tileID, float positionX, float positionY, float positionZ = 0)
-    //{
-    //    TerrainTile terrainTile = Instantiate(tile, new Vector3(positionX, positionY, positionZ), Quaternion.identity);
-    //    terrainTile.TileID = tileID;
-    //    PlacedTiles.Add(terrainTile);
-    //    return terrainTile;
-    //}
-
-    //PlayerTerrainTile PlacePlayerTile(PlayerTerrainTile tile, int tileID, float positionX, float positionY, float positionZ = 0)
-    //{
-    //    PlayerTerrainTile playerTile = Instantiate(tile, new Vector3(positionX, positionY, positionZ), Quaternion.identity);
-    //    playerTile.CurrentTileID = playerTile.TileID = tileID;
-    //    return playerTile;
-    //}
-
     void PlaceTilesOnMap()
     {
         for (int heightIndex = 0; heightIndex < mapInput.Length; heightIndex++)
@@ -190,6 +204,7 @@ public class MapController : MonoBehaviour
 
                 var mapTile = MapTileSpawner.Instance.CreateTileFromData(mapInput[heightIndex][widthIndex], widthIndex * tileSize, -heightIndex * tileSize);
                 ProcessMapTile(mapTile.TileID, mapTile);
+                MapTiles.Add(mapTile);
             }
         }
     }
@@ -201,445 +216,80 @@ public class MapController : MonoBehaviour
 
         SetNeighborsForEachTile();
 
-        PlayerReference = (MovableTile)ProcessedTiles[MapTileSpawner.Instance.PlayerStartingTileID];
-        Debug.Log("So far so good.");
-        //List<MapTile> playerNeighbors = FindTileNeighbors(mapInput[3][4]);
-        //foreach (MapTile playerNeighbor in playerNeighbors)
-        //{
-        //    Debug.Log(string.Format("NeighborID: {0}", playerNeighbor.TileID));
-        //}
+        PlayerReference = (PlayerTerrainTile)ProcessedTiles[MapTileSpawner.Instance.PlayerStartingTileID];
     }
 
     // Update is called once per frame
     void Update()
     {
-        //if(Input.GetKeyDown(KeyCode.RightArrow) && !inputBlocked)
-        //{
-        //    inputBlocked = true;
-        //    TryMoveRight(Time.deltaTime);
-        //}
-        //else if (Input.GetKeyDown(KeyCode.LeftArrow) && !inputBlocked)
-        //{
-        //    inputBlocked = true;
-        //    TryMoveLeft(Time.deltaTime);
-        //}
-        //else if (Input.GetKeyDown(KeyCode.UpArrow) && !inputBlocked)
-        //{
-        //    inputBlocked = true;
-        //    TryMoveUp(Time.deltaTime);
-        //}
-        //else if (Input.GetKeyDown(KeyCode.DownArrow) && !inputBlocked)
-        //{
-        //    inputBlocked = true;
-        //    TryMoveDown(Time.deltaTime);
-        //}
+
     }
 
-    public static bool AlmostEqual(Vector3 v1, Vector3 v2, float precision)
+    public bool TryMove(EnumMovementDirection movementDirection, out PlayerTerrainTile playerTile, out Vector3 playerDestination, out MovableTile boxTile, out Vector3 boxDestination)
     {
-        bool equal = true;
+        playerTile = null;
+        playerDestination = new Vector3();
+        boxTile = null;
+        boxDestination = new Vector3();
+        bool canMove = false;
 
-        if (Mathf.Abs(v1.x - v2.x) > precision) equal = false;
-        if (Mathf.Abs(v1.y - v2.y) > precision) equal = false;
-        if (Mathf.Abs(v1.z - v2.z) > precision) equal = false;
+        int CalculatedMovementDirection = CalculateMapOffsetForMovement(movementDirection);
 
-        return equal;
-    }
-
-    bool inputBlocked = false;
-
-    //for testing
-    public Vector3 GetNextPositionTest()
-    {
-        MapTile nextTile = ProcessedTiles[29];
-        return new Vector3(nextTile.PositionX, nextTile.PositionY, -1);
-    }
-
-    void MovePlayer(Vector3 position)
-    {
-        PlayerTileReference.transform.position = Vector3.MoveTowards(
-                    PlayerTileReference.transform.position,
-                    position,
-                    0.01f
-                    );
-    }
-
-    void MoveBox(ref TerrainTile box, Vector3 position, MapTile neighbor, MapTile boxNeighbor, float deltaTime)
-    {
-        //box.transform.position = Vector3.MoveTowards(
-        //    box.transform.position,
-        //    position,
-        //    0.01f
-        //    );
-        StartCoroutine(MoveBoxCoroutine(box, position, neighbor, boxNeighbor, 1.0f));
-    }
-
-    IEnumerator MovePlayerCoroutine(Vector3 position, MapTile neighbor, float moveTime = 1.5f)
-    {
-        float elapsedTime = 0.0f;
-        while (!AlmostEqual(PlayerReference.transform.position, position, 0.01f))
-        {
-            PlayerReference.transform.position = Vector3.Lerp(
-            PlayerReference.transform.position,
-            position,
-            (elapsedTime / moveTime)
-            );
-            //elapsedTime += 0.01f;
-            elapsedTime += Time.fixedDeltaTime;
-            yield return null;
-            //yield return new WaitForSeconds(0.01f);
-        }
-
-        if (AlmostEqual(PlayerReference.transform.position, position, 0.01f))
-        {
-            //Debug.Log("Change ID");
-            PlayerReference.CurrentTileID = neighbor.TileID;
-        }
-        inputBlocked = false;
-        yield return null;
-    }
-
-    IEnumerator MoveBoxCoroutine(TerrainTile box, Vector3 position, MapTile neighbor, MapTile boxNeighbor, float moveTime = 1.5f)
-    {
-        float elapsedTime = 0.0f;
-        while (!AlmostEqual(box.transform.position, position, 0.01f))
-        {
-            box.transform.position = Vector3.Lerp(
-            box.transform.position,
-            position,
-            (elapsedTime / moveTime)
-            );
-            //elapsedTime += 0.01f;
-            elapsedTime += Time.fixedDeltaTime;
-
-
-            yield return null;
-            //yield return new WaitForSeconds(0.01f);
-        }
-
-        if (AlmostEqual(box.transform.position, position, 0.01f))
-        {
-            //boxTile.TileID = boxNeighbor.TileID;
-            //update placed tiles (TerrainTile)
-            TerrainTile temp = PlacedTiles[neighbor.TileID];
-            PlacedTiles[neighbor.TileID] = PlacedTiles[boxNeighbor.TileID];
-            PlacedTiles[boxNeighbor.TileID] = temp;
-
-            //update processed tiles (MapTile)
-            ProcessedTiles[boxNeighbor.TileID].TurnIntoBox();
-            ProcessedTiles[neighbor.TileID].TurnIntoGrass();
-
-            //set neighbors again
-            //SetNeighborsForEachTile();
-        }
-        inputBlocked = false;
-        yield return null;
-    }
-
-    void TryMoveRight(float deltaTime)
-    {
         List<MapTile> playerNeighbors = GetPlayerNeighbors();
-        foreach(MapTile neighbor in playerNeighbors)
+        foreach (MapTile neighbor in playerNeighbors)
         {
-            if(neighbor.TileID == PlayerReference.CurrentTileID + 1 &&
+            if (neighbor.TileID == PlayerReference.CurrentTileID + CalculatedMovementDirection &&
                 neighbor.IsTraversable)
             {
-                Vector3 newPosition = new Vector3(neighbor.PositionX, neighbor.PositionY, -1);
+                playerTile = PlayerReference;
+                playerDestination = new Vector3(neighbor.PositionX, neighbor.PositionY, -1);
 
-                //while (!AlmostEqual(PlayerTileReference.transform.position, newPosition, 0.01f))
-                //{
-                //    MovePlayer(newPosition);
-                //}
+                PlayerReference.CurrentTileID = neighbor.TileID;
 
-                //if (AlmostEqual(PlayerTileReference.transform.position, newPosition, 0.02f))
-                //{
-                //    PlayerTileReference.CurrentTileID = neighbor.TileID;
-                //}
-                StartCoroutine(MovePlayerCoroutine(newPosition, neighbor));
+                canMove = true;
             }
-            else if (neighbor.TileID == PlayerReference.CurrentTileID + 1 &&
+            else if (neighbor.TileID == PlayerReference.CurrentTileID + CalculatedMovementDirection &&
                 neighbor.IsPushable)
             {
                 //Check if neighbor can be moved up
                 List<MapTile> boxNeighbors = GetNeighbors(neighbor);
                 foreach (MapTile boxNeighbor in boxNeighbors)
                 {
-                    if (boxNeighbor.TileID == neighbor.TileID + 1 &&
+                    if (boxNeighbor.TileID == neighbor.TileID + CalculatedMovementDirection &&
                         boxNeighbor.IsTraversable)
                     {
-                        Vector3 newBoxPosition = new Vector3(boxNeighbor.PositionX, boxNeighbor.PositionY, -1);
+                        int boxCurrentID = neighbor.TileID;
+                        int boxesNeighborCurrentID = boxNeighbor.TileID;
 
-                        TerrainTile boxTile = PlacedTiles[neighbor.TileID];
-                        //while (!AlmostEqual(boxTile.transform.position, newBoxPosition, 0.01f))
-                        //{
-                        //    MoveBox(ref boxTile, newBoxPosition, deltaTime);
-                        //}
-                        MoveBox(ref boxTile, newBoxPosition, neighbor, boxNeighbor, deltaTime);
+                        PlayerReference.CurrentTileID = boxCurrentID;
 
-                        Vector3 newPosition = new Vector3(neighbor.PositionX, neighbor.PositionY, -1);
-                        //MovePlayer(newPosition);
-                        StartCoroutine(MovePlayerCoroutine(newPosition, neighbor));
+                        playerTile = PlayerReference;
+                        playerDestination = new Vector3(neighbor.PositionX, neighbor.PositionY, -1);
 
-                        //if (AlmostEqual(boxTile.transform.position, newBoxPosition, 0.01f))
-                        //{
-                        //    //boxTile.TileID = boxNeighbor.TileID;
-                        //    //update placed tiles (TerrainTile)
-                        //    TerrainTile temp = PlacedTiles[neighbor.TileID];
-                        //    PlacedTiles[neighbor.TileID] = PlacedTiles[boxNeighbor.TileID];
-                        //    PlacedTiles[boxNeighbor.TileID] = temp;
+                        //Using this, because everything is a pointer in C#...
+                        boxTile = (MovableTile)MapTiles[neighbor.TileID];
+                        boxTile.CurrentTileID = boxesNeighborCurrentID;
+                        boxDestination = new Vector3(boxNeighbor.PositionX, boxNeighbor.PositionY, -1);
 
-                        //    //update processed tiles (MapTile)
-                        //    ProcessedTiles[boxNeighbor.TileID].TurnIntoBox();
-                        //    ProcessedTiles[neighbor.TileID].TurnIntoGrass();
+                        MapTile temp = MapTiles[neighbor.TileID];
+                        MapTiles[neighbor.TileID] = MapTiles[boxNeighbor.TileID];
+                        MapTiles[boxNeighbor.TileID] = temp;
 
-                        //    //set neighbors again
-                        //    //SetNeighborsForEachTile();
-                        //}
+                        //ProcessedTiles[boxCurrentID].TurnIntoGrass();//box to grass
+                        //ProcessedTiles[boxesNeighborCurrentID].TurnIntoBox();//grass to box
 
-                        //if (AlmostEqual(PlayerTileReference.transform.position, newPosition, 0.01f))
-                        //{
-                        //    PlayerTileReference.CurrentTileID = neighbor.TileID;
-                        //}
+                        EnumTileType boxCurrentType = ProcessedTiles[boxCurrentID].TileType;
+                        EnumTileType boxesNeighborCurrentType = ProcessedTiles[boxesNeighborCurrentID].TileType;
+
+                        ProcessedTiles[boxCurrentID].TurnInto(boxesNeighborCurrentType);//box to grass/target
+                        ProcessedTiles[boxesNeighborCurrentID].TurnInto(boxCurrentType);//grass/target to box
+
+                        canMove = true;
                     }
                 }
             }
-            else
-            {
-                inputBlocked = false;
-            }
         }
-    }
 
-    void TryMoveLeft(float deltaTime)
-    {
-        List<MapTile> playerNeighbors = GetPlayerNeighbors();
-        foreach (MapTile neighbor in playerNeighbors)
-        {
-            if (neighbor.TileID == PlayerTileReference.CurrentTileID - 1 &&
-                neighbor.IsTraversable)
-            {
-                Vector3 newPosition = new Vector3(neighbor.PositionX, neighbor.PositionY, -1);
-
-                //while (!AlmostEqual(PlayerTileReference.transform.position, newPosition, 0.01f))
-                //{
-                //    MovePlayer(newPosition);
-                //}
-
-                //if (AlmostEqual(PlayerTileReference.transform.position, newPosition, 0.01f))
-                //{
-                //    PlayerTileReference.CurrentTileID = neighbor.TileID;
-                //}
-                StartCoroutine(MovePlayerCoroutine(newPosition, neighbor));
-            }
-            else if (neighbor.TileID == PlayerTileReference.CurrentTileID - 1 &&
-                neighbor.IsPushable)
-            {
-                //Check if neighbor can be moved up
-                List<MapTile> boxNeighbors = GetNeighbors(neighbor);
-                foreach (MapTile boxNeighbor in boxNeighbors)
-                {
-                    if (boxNeighbor.TileID == neighbor.TileID - 1 &&
-                        boxNeighbor.IsTraversable)
-                    {
-                        Vector3 newBoxPosition = new Vector3(boxNeighbor.PositionX, boxNeighbor.PositionY, -1);
-
-                        TerrainTile boxTile = PlacedTiles[neighbor.TileID];
-                        //while (!AlmostEqual(boxTile.transform.position, newBoxPosition, 0.01f))
-                        //{
-                        //    MoveBox(ref boxTile, newBoxPosition, deltaTime);
-                        //}
-                        MoveBox(ref boxTile, newBoxPosition, neighbor, boxNeighbor, deltaTime);
-
-                        Vector3 newPosition = new Vector3(neighbor.PositionX, neighbor.PositionY, -1);
-                        //MovePlayer(newPosition);
-                        StartCoroutine(MovePlayerCoroutine(newPosition, neighbor));
-
-                        //if (AlmostEqual(boxTile.transform.position, newBoxPosition, 0.01f))
-                        //{
-                        //    //boxTile.TileID = boxNeighbor.TileID;
-                        //    //update placed tiles (TerrainTile)
-                        //    TerrainTile temp = PlacedTiles[neighbor.TileID];
-                        //    PlacedTiles[neighbor.TileID] = PlacedTiles[boxNeighbor.TileID];
-                        //    PlacedTiles[boxNeighbor.TileID] = temp;
-
-                        //    //update processed tiles (MapTile)
-                        //    ProcessedTiles[boxNeighbor.TileID].TurnIntoBox();
-                        //    ProcessedTiles[neighbor.TileID].TurnIntoGrass();
-
-                        //    //set neighbors again
-                        //    //SetNeighborsForEachTile();
-                        //}
-
-                        //if (AlmostEqual(PlayerTileReference.transform.position, newPosition, 0.01f))
-                        //{
-                        //    PlayerTileReference.CurrentTileID = neighbor.TileID;
-                        //}
-                    }
-                }
-            }
-            else
-            {
-                inputBlocked = false;
-            }
-        }
-    }
-
-    void TryMoveUp(float deltaTime)
-    {
-        List<MapTile> playerNeighbors = GetPlayerNeighbors();
-        foreach (MapTile neighbor in playerNeighbors)
-        {
-            if (neighbor.TileID == PlayerTileReference.CurrentTileID - mapWidth &&
-                neighbor.IsTraversable)
-            {
-                Vector3 newPosition = new Vector3(neighbor.PositionX, neighbor.PositionY, -1);
-
-                //PlayerTileReference.transform.position = Vector3.Lerp(
-                //    PlayerTileReference.transform.position,
-                //    newPosition,
-                //    deltaTime * 5
-                //    );
-
-                //while (!AlmostEqual(PlayerTileReference.transform.position, newPosition, 0.01f))
-                //{
-                //    MovePlayer(newPosition);
-                //}
-
-                //if (AlmostEqual(PlayerTileReference.transform.position, newPosition, 0.01f))
-                //{
-                //    PlayerTileReference.CurrentTileID = neighbor.TileID;
-                //}
-                StartCoroutine(MovePlayerCoroutine(newPosition, neighbor));
-            }
-            else if (neighbor.TileID == PlayerTileReference.CurrentTileID - mapWidth &&
-                neighbor.IsPushable)
-            {
-                //Check if neighbor can be moved up
-                List<MapTile> boxNeighbors = GetNeighbors(neighbor);
-                foreach(MapTile boxNeighbor in boxNeighbors)
-                {
-                    if(boxNeighbor.TileID == neighbor.TileID - mapWidth && 
-                        boxNeighbor.IsTraversable)
-                    {
-                        Vector3 newBoxPosition = new Vector3(boxNeighbor.PositionX, boxNeighbor.PositionY, 0);
-
-                        TerrainTile boxTile = PlacedTiles[neighbor.TileID];
-                        //while (!AlmostEqual(boxTile.transform.position, newBoxPosition, 0.01f))
-                        //{
-                        //    MoveBox(ref boxTile, newBoxPosition, deltaTime);
-                        //}
-                        MoveBox(ref boxTile, newBoxPosition, neighbor, boxNeighbor, deltaTime);
-
-                        Vector3 newPosition = new Vector3(neighbor.PositionX, neighbor.PositionY, -1);
-                        //MovePlayer(newPosition);
-                        StartCoroutine(MovePlayerCoroutine(newPosition, neighbor));
-
-                        //if (AlmostEqual(boxTile.transform.position, newBoxPosition, 0.01f))
-                        //{
-                        //    //boxTile.TileID = boxNeighbor.TileID;
-                        //    //update placed tiles (TerrainTile)
-                        //    TerrainTile temp = PlacedTiles[neighbor.TileID];
-                        //    PlacedTiles[neighbor.TileID] = PlacedTiles[boxNeighbor.TileID];
-                        //    PlacedTiles[boxNeighbor.TileID] = temp;
-
-                        //    //update processed tiles (MapTile)
-                        //    ProcessedTiles[boxNeighbor.TileID].TurnIntoBox();
-                        //    ProcessedTiles[neighbor.TileID].TurnIntoGrass();
-
-                        //    //set neighbors again
-                        //    //SetNeighborsForEachTile();
-                        //}
-
-                        //if (AlmostEqual(PlayerTileReference.transform.position, newPosition, 0.01f))
-                        //{
-                        //    PlayerTileReference.CurrentTileID = neighbor.TileID;
-                        //}
-                    }
-                }
-            }
-            else
-            {
-                inputBlocked = false;
-            }
-        }
-    }
-    void TryMoveDown(float deltaTime)
-    {
-        List<MapTile> playerNeighbors = GetPlayerNeighbors();
-        foreach (MapTile neighbor in playerNeighbors)
-        {
-            if (neighbor.TileID == PlayerTileReference.CurrentTileID + mapWidth &&
-                neighbor.IsTraversable)
-            {
-                Vector3 newPosition = new Vector3(neighbor.PositionX, neighbor.PositionY, -1);
-
-                //PlayerTileReference.transform.position = Vector3.Lerp(
-                //    PlayerTileReference.transform.position,
-                //    newPosition,
-                //    deltaTime * 5
-                //    );
-
-                //while (!AlmostEqual(PlayerTileReference.transform.position, newPosition, 0.01f))
-                //{
-                //    MovePlayer(newPosition);
-                //}
-
-                //if (AlmostEqual(PlayerTileReference.transform.position, newPosition, 0.01f))
-                //{
-                //    PlayerTileReference.CurrentTileID = neighbor.TileID;
-                //}
-                StartCoroutine(MovePlayerCoroutine(newPosition, neighbor));
-            }
-            else if (neighbor.TileID == PlayerTileReference.CurrentTileID + mapWidth &&
-                neighbor.IsPushable)
-            {
-                //Check if neighbor can be moved up
-                List<MapTile> boxNeighbors = GetNeighbors(neighbor);
-                foreach (MapTile boxNeighbor in boxNeighbors)
-                {
-                    if (boxNeighbor.TileID == neighbor.TileID + mapWidth &&
-                        boxNeighbor.IsTraversable)
-                    {
-                        Vector3 newBoxPosition = new Vector3(boxNeighbor.PositionX, boxNeighbor.PositionY, -1);
-
-                        TerrainTile boxTile = PlacedTiles[neighbor.TileID];
-                        //while(!AlmostEqual(boxTile.transform.position, newBoxPosition, 0.01f))
-                        //{
-                        //    MoveBox(ref boxTile, newBoxPosition, deltaTime);
-                        //}
-                        MoveBox(ref boxTile, newBoxPosition, neighbor, boxNeighbor, deltaTime);
-
-                        Vector3 newPosition = new Vector3(neighbor.PositionX, neighbor.PositionY, -1);
-                        //MovePlayer(newPosition);
-                        StartCoroutine(MovePlayerCoroutine(newPosition, neighbor));
-
-                        //if (AlmostEqual(boxTile.transform.position, newBoxPosition, 0.01f))
-                        //{
-                        //    //boxTile.TileID = boxNeighbor.TileID;
-                        //    //update placed tiles (TerrainTile)
-                        //    TerrainTile temp = PlacedTiles[neighbor.TileID];
-                        //    PlacedTiles[neighbor.TileID] = PlacedTiles[boxNeighbor.TileID];
-                        //    PlacedTiles[boxNeighbor.TileID] = temp;
-
-                        //    //update processed tiles (MapTile)
-                        //    ProcessedTiles[boxNeighbor.TileID].TurnIntoBox();
-                        //    ProcessedTiles[neighbor.TileID].TurnIntoGrass();
-
-                        //    //set neighbors again
-                        //    //SetNeighborsForEachTile();
-                        //}
-
-                        //if (AlmostEqual(PlayerTileReference.transform.position, newPosition, 0.01f))
-                        //{
-                        //    PlayerTileReference.CurrentTileID = neighbor.TileID;
-                        //}
-                    }
-                }
-            }
-            else
-            {
-                inputBlocked = false;
-            }
-        }
+        return canMove;
     }
 }

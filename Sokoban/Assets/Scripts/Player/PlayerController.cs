@@ -23,9 +23,14 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(commandExecutor.TryToExecute(HandleInput()))
-        {
+        //if(commandExecutor.TryToExecute(HandleInput()))
+        //{
 
+        //}
+        Command command = HandleInput();
+        if(command.GetType() != Idle.GetType())
+        {
+            commandExecutor.TryToExecute(command);
         }
     }
 

@@ -12,7 +12,7 @@ public class MapTileSpawner : MonoBehaviour
     public int targetTileZ = 0;
 
     public MovableTile boxTile;
-    public MovableTile playerTile;
+    public PlayerTerrainTile playerTile;
     public TerrainTile wallTile;
     public TerrainTile grassTile;
     public TerrainTile targetTile;
@@ -80,7 +80,7 @@ public class MapTileSpawner : MonoBehaviour
                     Spawner.AnyTileSpawner.SpawnTile(tileData, grassTile, positionX, positionY, grassTileZ);
 
                     playerStartingTileID = tileData.TileID;
-                    Spawner = new TileSpawner(ScriptableObject.CreateInstance<MovableTileSpawner>());
+                    Spawner = new TileSpawner(ScriptableObject.CreateInstance<PlayerTileSpawner>());
                     return Spawner.AnyTileSpawner.SpawnTile(tileData, playerTile, positionX, positionY, playerTileZ);
                 }
             case EnumTileType.None:
@@ -101,6 +101,8 @@ public interface ITileSpawner
     public MapTile SpawnTile(MapTileData tileData, TerrainTile terrainTilePrefab, int positionX, int positionY, int positionZ);
 
     public MapTile SpawnTile(MapTileData tileData, MovableTile movableTilePrefab, int positionX, int positionY, int positionZ);
+
+    public MapTile SpawnTile(MapTileData tileData, PlayerTerrainTile playerTilePrefab, int positionX, int positionY, int positionZ);
 }
 
 public interface ITerrainTileSpawner : ITileSpawner
@@ -111,6 +113,11 @@ public interface ITerrainTileSpawner : ITileSpawner
 public interface IMovableTileSpawner : ITileSpawner
 {
     public new MapTile SpawnTile(MapTileData tileData, MovableTile movableTilePrefab, int positionX, int positionY, int positionZ);
+}
+
+public interface IPlayerTileSpawner : ITileSpawner
+{
+    public new MapTile SpawnTile(MapTileData tileData, PlayerTerrainTile playerTilePrefab, int positionX, int positionY, int positionZ);
 }
 
 public class TileSpawner
@@ -146,6 +153,10 @@ public class TerrainTileSpawner : ScriptableObject, ITerrainTileSpawner
     {
         throw new System.NotImplementedException();
     }
+    public MapTile SpawnTile(MapTileData tileData, PlayerTerrainTile playerTilePrefab, int positionX, int positionY, int positionZ)
+    {
+        throw new System.NotImplementedException();
+    }
 }
 
 public class MovableTileSpawner : ScriptableObject, IMovableTileSpawner
@@ -160,5 +171,29 @@ public class MovableTileSpawner : ScriptableObject, IMovableTileSpawner
         var movableTile = Instantiate(movableTilePrefab, new Vector3(positionX, positionY, positionZ), Quaternion.identity);
         movableTile.PrepareTile(tileData);
         return movableTile;
+    }
+    public MapTile SpawnTile(MapTileData tileData, PlayerTerrainTile playerTilePrefab, int positionX, int positionY, int positionZ)
+    {
+        throw new System.NotImplementedException();
+    }
+}
+
+public class PlayerTileSpawner : ScriptableObject, IPlayerTileSpawner
+{
+    public MapTile SpawnTile(MapTileData tileData, TerrainTile terrainTilePrefab, int positionX, int positionY, int positionZ)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public MapTile SpawnTile(MapTileData tileData, MovableTile movableTilePrefab, int positionX, int positionY, int positionZ)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public MapTile SpawnTile(MapTileData tileData, PlayerTerrainTile playerTilePrefab, int positionX, int positionY, int positionZ)
+    {
+        var playerTile = Instantiate(playerTilePrefab, new Vector3(positionX, positionY, positionZ), Quaternion.identity);
+        playerTile.PrepareTile(tileData);
+        return playerTile;
     }
 }

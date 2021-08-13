@@ -178,16 +178,16 @@ public class MapTile : MonoBehaviour, ITile
         BoundryY = by;
     }
 
-    public void TurnIntoGrass()
+    public void TurnIntoTraversable()
     {
-        TileType = EnumTileType.Grass;
+        //TileType = EnumTileType.Grass;
         IsTraversable = true;
         IsPushable = false;
     }
 
-    public void TurnIntoBox()
+    public void TurnIntoPushable()
     {
-        TileType = EnumTileType.Box;
+        //TileType = EnumTileType.Box;
         IsTraversable = false;
         IsPushable = true;
     }
@@ -212,7 +212,14 @@ public class MapTile : MonoBehaviour, ITile
                 break;
             case EnumTileType.Target:
                 {
-                    TileType = EnumTileType.Target;
+                    //TileType = EnumTileType.Target;
+                    IsTraversable = true;
+                    IsPushable = false;
+                }
+                break;
+            case EnumTileType.Player:
+                {
+                    TileType = EnumTileType.Grass;
                     IsTraversable = true;
                     IsPushable = false;
                 }

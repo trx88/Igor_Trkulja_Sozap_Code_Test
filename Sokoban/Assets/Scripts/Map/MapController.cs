@@ -88,6 +88,8 @@ public class MapController : MonoBehaviour
         new NeighborsDirection(0, 1) //down
     };
 
+    public Transform mapParent;
+
     private PlayerTerrainTile PlayerReference;
 
     public PlayerTerrainTile GetPlayerTile()
@@ -198,7 +200,7 @@ public class MapController : MonoBehaviour
                 mapInput[heightIndex][widthIndex].RowIndex = heightIndex;
                 mapInput[heightIndex][widthIndex].ColumnIndex = widthIndex;
 
-                var mapTile = MapTileSpawner.Instance.CreateTileFromData(mapInput[heightIndex][widthIndex], widthIndex * tileSize, -heightIndex * tileSize);
+                var mapTile = MapTileSpawner.Instance.CreateTileFromData(mapInput[heightIndex][widthIndex], widthIndex * tileSize, -heightIndex * tileSize, mapParent);
                 ProcessMapTile(mapTile.TileID, mapTile);
                 //MapTiles.Add(mapTile);
             }
@@ -213,6 +215,10 @@ public class MapController : MonoBehaviour
         SetNeighborsForEachTile();
 
         PlayerReference = (PlayerTerrainTile)ProcessedTiles[MapTileSpawner.Instance.PlayerStartingTileID];
+
+        Vector3 topLeftPosition = new Vector3(Screen.width * 0.05f, Screen.height * 0.9f, 0);
+        mapParent.transform.position = Camera.main.ScreenToWorldPoint(topLeftPosition);
+        mapParent.transform.position = new Vector3(mapParent.transform.position.x, mapParent.transform.position.y, 0);
     }
 
     // Update is called once per frame

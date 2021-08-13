@@ -40,12 +40,30 @@ public class PlayerTerrainTile : MapTile, IMoveableTile
 
     IEnumerator MovePlayerCoroutine(Vector3 position, float moveTime = 2.0f)
     {
+        //movementDone = false;
+        //float elapsedTime = 0.0f;
+        //while (!AlmostEqual(transform.position, position, 0.01f))
+        //{
+        //    transform.position = Vector3.Lerp(
+        //    transform.position,
+        //    position,
+        //    (elapsedTime / moveTime)
+        //    );
+        //    elapsedTime += 0.01f;
+        //    //elapsedTime += Time.fixedDeltaTime;
+        //    yield return new WaitForSeconds(0.01f);
+        //    //yield return new WaitForSeconds(0.01f);
+        //}
+        ////Debug.Log("Stopped moving.");
+        //movementDone = true;
+        //yield return null;
+
         movementDone = false;
         float elapsedTime = 0.0f;
-        while (!AlmostEqual(transform.position, position, 0.01f))
+        while (!AlmostEqual(transform.localPosition, position, 0.01f))
         {
-            transform.position = Vector3.Lerp(
-            transform.position,
+            transform.localPosition = Vector3.Lerp(
+            transform.localPosition,
             position,
             (elapsedTime / moveTime)
             );
@@ -61,19 +79,43 @@ public class PlayerTerrainTile : MapTile, IMoveableTile
 
     IEnumerator PlayerPushesBoxCoroutine(Vector3 position, MovableTile box, Vector3 boxNewPosition, float moveTime = 2.0f)
     {
+        //movementDone = false;
+        //float elapsedTime = 0.0f;
+        //while (!AlmostEqual(transform.position, position, 0.01f))
+        //{
+        //    transform.position = Vector3.Lerp(
+        //    transform.position,
+        //    position,
+        //    (elapsedTime / moveTime)
+        //    );
+        //    elapsedTime += 0.01f;
+
+        //    box.transform.position = Vector3.Lerp(
+        //    box.transform.position,
+        //    boxNewPosition,
+        //    (elapsedTime / moveTime)
+        //    );
+        //    elapsedTime += 0.01f;
+
+        //    yield return new WaitForSeconds(0.01f);
+        //}
+        ////Debug.Log("Stopped moving.");
+        //movementDone = true;
+        //yield return null;
+
         movementDone = false;
         float elapsedTime = 0.0f;
-        while (!AlmostEqual(transform.position, position, 0.01f))
+        while (!AlmostEqual(transform.localPosition, position, 0.01f))
         {
-            transform.position = Vector3.Lerp(
-            transform.position,
+            transform.localPosition = Vector3.Lerp(
+            transform.localPosition,
             position,
             (elapsedTime / moveTime)
             );
             elapsedTime += 0.01f;
 
-            box.transform.position = Vector3.Lerp(
-            box.transform.position,
+            box.transform.localPosition = Vector3.Lerp(
+            box.transform.localPosition,
             boxNewPosition,
             (elapsedTime / moveTime)
             );

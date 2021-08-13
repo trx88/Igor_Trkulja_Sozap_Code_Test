@@ -6,9 +6,9 @@ public abstract class Command
 {
     public bool CommandCompleted = false;
 
-    public abstract void Execute(PlayerTerrainTile tile, MapController mapController);
+    public abstract void Execute(MapController mapController);
 
-    public async virtual void Move(MapController mapController)
+    public virtual void Move(MapController mapController)
     {
 
     }
@@ -16,7 +16,7 @@ public abstract class Command
 
 public class DoNothing : Command
 {
-    public override void Execute(PlayerTerrainTile tile, MapController mapController)
+    public override void Execute(MapController mapController)
     {
         Move(mapController);
     }
@@ -29,7 +29,7 @@ public class DoNothing : Command
 
 public class MoveRight : Command
 {
-    public override void Execute(PlayerTerrainTile tile, MapController mapController)
+    public override void Execute(MapController mapController)
     {
         Move(mapController);
     }
@@ -49,25 +49,24 @@ public class MoveRight : Command
             {
                 //Move both
                 await OutPlayerTile.MoveBoxToAnotherTile(newPlayerPosition, OutBoxTile, newBoxPosition);
-                //await OutBoxTile.MoveToAnotherTile(newBoxPosition);
-                Debug.Log(string.Format("Player on tile: {0} Box on tile: {1}", OutPlayerTile.CurrentTileID, OutBoxTile.CurrentTileID));
+                //Debug.Log(string.Format("Player on tile: {0} Box on tile: {1}", OutPlayerTile.CurrentTileID, OutBoxTile.CurrentTileID));
             }
             else if(OutPlayerTile)
             {
+                //Move player
                 await OutPlayerTile.MoveToAnotherTile(newPlayerPosition);
-                Debug.Log(string.Format("Player on tile: {0}", OutPlayerTile.CurrentTileID));
+                //Debug.Log(string.Format("Player on tile: {0}", OutPlayerTile.CurrentTileID));
             }
         }
 
         //Debug.Log("Command completed");
-        //call map controller method for replacing tiles
         CommandCompleted = true;
     }
 }
 
 public class MoveLeft : Command
 {
-    public override void Execute(PlayerTerrainTile tile, MapController mapController)
+    public override void Execute(MapController mapController)
     {
         Move(mapController);
     }
@@ -87,25 +86,24 @@ public class MoveLeft : Command
             {
                 //Move both
                 await OutPlayerTile.MoveBoxToAnotherTile(newPlayerPosition, OutBoxTile, newBoxPosition);
-                //await OutBoxTile.MoveToAnotherTile(newBoxPosition);
-                Debug.Log(string.Format("Player on tile: {0} Box on tile: {1}", OutPlayerTile.CurrentTileID, OutBoxTile.CurrentTileID));
+                //Debug.Log(string.Format("Player on tile: {0} Box on tile: {1}", OutPlayerTile.CurrentTileID, OutBoxTile.CurrentTileID));
             }
             else if (OutPlayerTile)
             {
+                //Move player
                 await OutPlayerTile.MoveToAnotherTile(newPlayerPosition);
-                Debug.Log(string.Format("Player on tile: {0}", OutPlayerTile.CurrentTileID));
+                //Debug.Log(string.Format("Player on tile: {0}", OutPlayerTile.CurrentTileID));
             }
         }
 
         //Debug.Log("Command completed");
-        //call map controller method for replacing tiles
         CommandCompleted = true;
     }
 }
 
 public class MoveUp : Command
 {
-    public override void Execute(PlayerTerrainTile tile, MapController mapController)
+    public override void Execute(MapController mapController)
     {
         Move(mapController);
     }
@@ -125,25 +123,24 @@ public class MoveUp : Command
             {
                 //Move both
                 await OutPlayerTile.MoveBoxToAnotherTile(newPlayerPosition, OutBoxTile, newBoxPosition);
-                //await OutBoxTile.MoveToAnotherTile(newBoxPosition);
-                Debug.Log(string.Format("Player on tile: {0} Box on tile: {1}", OutPlayerTile.CurrentTileID, OutBoxTile.CurrentTileID));
+                //Debug.Log(string.Format("Player on tile: {0} Box on tile: {1}", OutPlayerTile.CurrentTileID, OutBoxTile.CurrentTileID));
             }
             else if (OutPlayerTile)
             {
+                //Move player
                 await OutPlayerTile.MoveToAnotherTile(newPlayerPosition);
-                Debug.Log(string.Format("Player on tile: {0}", OutPlayerTile.CurrentTileID));
+                //Debug.Log(string.Format("Player on tile: {0}", OutPlayerTile.CurrentTileID));
             }
         }
 
         //Debug.Log("Command completed");
-        //call map controller method for replacing tiles
         CommandCompleted = true;
     }
 }
 
 public class MoveDown : Command
 {
-    public override void Execute(PlayerTerrainTile tile, MapController mapController)
+    public override void Execute(MapController mapController)
     {
         Move(mapController);
     }
@@ -163,18 +160,17 @@ public class MoveDown : Command
             {
                 //Move both
                 await OutPlayerTile.MoveBoxToAnotherTile(newPlayerPosition, OutBoxTile, newBoxPosition);
-                //await OutBoxTile.MoveToAnotherTile(newBoxPosition);
-                Debug.Log(string.Format("Player on tile: {0} Box on tile: {1}", OutPlayerTile.CurrentTileID, OutBoxTile.CurrentTileID));
+                //Debug.Log(string.Format("Player on tile: {0} Box on tile: {1}", OutPlayerTile.CurrentTileID, OutBoxTile.CurrentTileID));
             }
             else if (OutPlayerTile)
             {
+                //Move player
                 await OutPlayerTile.MoveToAnotherTile(newPlayerPosition);
-                Debug.Log(string.Format("Player on tile: {0}", OutPlayerTile.CurrentTileID));
+                //Debug.Log(string.Format("Player on tile: {0}", OutPlayerTile.CurrentTileID));
             }
         }
 
         //Debug.Log("Command completed");
-        //call map controller method for replacing tiles
         CommandCompleted = true;
     }
 }

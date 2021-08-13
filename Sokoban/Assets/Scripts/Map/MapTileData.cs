@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
+[System.Serializable]
 public class MapTileData
 {
     public int TileID;
@@ -123,35 +124,5 @@ public class MapTileData
                 }
                 break;
         }
-    }
-
-    public void SetPosition(int x, int y)
-    {
-        PositionX = x;
-        PositionY = y;
-        BoundryX = x + 1;
-        BoundryY = y - 1;
-    }
-
-    public void SetPosition(int x, int y, int bx, int by)
-    {
-        PositionX = x;
-        PositionY = y;
-        BoundryX = bx;
-        BoundryY = by;
-    }
-
-    public void TurnIntoGrass()
-    {
-        TileType = EnumTileType.Grass;
-        IsTraversable = true;
-        IsPushable = false;
-    }
-
-    public void TurnIntoBox()
-    {
-        TileType = EnumTileType.Box;
-        IsTraversable = false;
-        IsPushable = true;
     }
 }

@@ -21,26 +21,17 @@ public class CommandExecutor : MonoBehaviour
         
     }
 
-    public bool TryToExecute(Command command)
+    public void TryToExecute(Command command)
     {
-        bool success = false;
-
         if (CommandToExecute != null && CommandToExecute.CommandCompleted)
         {
             CommandToExecute = null;
-            success = false;
-        }
-        else
-        {
-            success = true;
         }
 
         if (CommandToExecute == null)
         {
             CommandToExecute = command;
-            CommandToExecute.Execute(mapController.GetPlayerTile(), mapController);
+            CommandToExecute.Execute(mapController);
         }
-
-        return success;
     }
 }

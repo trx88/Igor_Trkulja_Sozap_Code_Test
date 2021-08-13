@@ -20,6 +20,7 @@ public class MapTileSpawner : MonoBehaviour
     public TerrainTile emptyTile;
     #endregion
 
+    //TODO: Does this need to be a Singleton???
     private static MapTileSpawner instance;
 
     public static MapTileSpawner Instance { get { return instance; } }
@@ -34,8 +35,6 @@ public class MapTileSpawner : MonoBehaviour
         {
             instance = this;
         }
-
-        
     }
 
     private int playerStartingTileID;

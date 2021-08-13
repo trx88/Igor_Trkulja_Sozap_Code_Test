@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//Handles player input.
 public class PlayerController : MonoBehaviour
 {
     Command Idle, ArrowRight, ArrowLeft, ArrowUp, ArrowDown, ButtonRight, ButtonLeft, ButtonUp, ButtonDown;
@@ -10,7 +11,6 @@ public class PlayerController : MonoBehaviour
     private CommandExecutor commandExecutor;
 
     private Command uiCommand = null;
-    private Command commandToExecute = null;
 
     public Button UIButtonRight;
     public Button UIButtonLeft;

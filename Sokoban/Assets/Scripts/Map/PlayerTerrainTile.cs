@@ -40,24 +40,6 @@ public class PlayerTerrainTile : MapTile, IMoveableTile
 
     IEnumerator MovePlayerCoroutine(Vector3 position, float moveTime = 2.0f)
     {
-        //movementDone = false;
-        //float elapsedTime = 0.0f;
-        //while (!AlmostEqual(transform.position, position, 0.01f))
-        //{
-        //    transform.position = Vector3.Lerp(
-        //    transform.position,
-        //    position,
-        //    (elapsedTime / moveTime)
-        //    );
-        //    elapsedTime += 0.01f;
-        //    //elapsedTime += Time.fixedDeltaTime;
-        //    yield return new WaitForSeconds(0.01f);
-        //    //yield return new WaitForSeconds(0.01f);
-        //}
-        ////Debug.Log("Stopped moving.");
-        //movementDone = true;
-        //yield return null;
-
         movementDone = false;
         float elapsedTime = 0.0f;
         while (!AlmostEqual(transform.localPosition, position, 0.01f))
@@ -69,8 +51,7 @@ public class PlayerTerrainTile : MapTile, IMoveableTile
             );
             elapsedTime += 0.01f;
             //elapsedTime += Time.fixedDeltaTime;
-            yield return new WaitForSeconds(0.01f);
-            //yield return new WaitForSeconds(0.01f);
+            yield return null;
         }
         //Debug.Log("Stopped moving.");
         movementDone = true;
@@ -79,30 +60,6 @@ public class PlayerTerrainTile : MapTile, IMoveableTile
 
     IEnumerator PlayerPushesBoxCoroutine(Vector3 position, MovableTile box, Vector3 boxNewPosition, float moveTime = 2.0f)
     {
-        //movementDone = false;
-        //float elapsedTime = 0.0f;
-        //while (!AlmostEqual(transform.position, position, 0.01f))
-        //{
-        //    transform.position = Vector3.Lerp(
-        //    transform.position,
-        //    position,
-        //    (elapsedTime / moveTime)
-        //    );
-        //    elapsedTime += 0.01f;
-
-        //    box.transform.position = Vector3.Lerp(
-        //    box.transform.position,
-        //    boxNewPosition,
-        //    (elapsedTime / moveTime)
-        //    );
-        //    elapsedTime += 0.01f;
-
-        //    yield return new WaitForSeconds(0.01f);
-        //}
-        ////Debug.Log("Stopped moving.");
-        //movementDone = true;
-        //yield return null;
-
         movementDone = false;
         float elapsedTime = 0.0f;
         while (!AlmostEqual(transform.localPosition, position, 0.01f))
@@ -121,62 +78,38 @@ public class PlayerTerrainTile : MapTile, IMoveableTile
             );
             elapsedTime += 0.01f;
 
-            yield return new WaitForSeconds(0.01f);
+            //yield return new WaitForSeconds(0.01f);
+            yield return null;
         }
         //Debug.Log("Stopped moving.");
         movementDone = true;
         yield return null;
     }
 
-    public async Task Test(Vector3 tilePosition)
-    {
-        //await new WaitForSeconds(1.0f);
-        //Debug.Log("Wait for coroutine.");
-        //await StartCoroutine(TestCoroutine());
-        await StartCoroutine(MovePlayerCoroutine(tilePosition));
-        //Debug.Log("Waiting done.");
-    }
+    //public async Task MovePlayer(Vector3 tilePosition)
+    //{
+    //    await StartCoroutine(MovePlayerCoroutine(tilePosition));
+    //}
 
-    public async Task TestBox(Vector3 tilePosition, MovableTile box, Vector3 boxNewPosition)
-    {
-        //await new WaitForSeconds(1.0f);
-        //Debug.Log("Wait for coroutine.");
-        //await StartCoroutine(TestCoroutine());
-        await StartCoroutine(PlayerPushesBoxCoroutine(tilePosition, box, boxNewPosition));
-        //Debug.Log("Waiting done.");
-    }
+    //public async Task MoveBoxWithPlayer(Vector3 tilePosition, MovableTile box, Vector3 boxNewPosition)
+    //{
+    //    await StartCoroutine(PlayerPushesBoxCoroutine(tilePosition, box, boxNewPosition));
+    //}
 
     public async Task MoveToAnotherTile(Vector3 tilePosition)
     {
         //transform.position = tilePosition;
 
-        //StartCoroutine(MovePlayerCoroutine(tilePosition));
-
-        await Test(tilePosition);
+        //await MovePlayer(tilePosition);
+        await StartCoroutine(MovePlayerCoroutine(tilePosition));
     }
 
     public async Task MoveBoxToAnotherTile(Vector3 tilePosition, MovableTile box, Vector3 boxNewPosition)
     {
         //transform.position = tilePosition;
 
-        //StartCoroutine(MovePlayerCoroutine(tilePosition));
-
-        await TestBox(tilePosition, box, boxNewPosition);
-    }
-
-    public bool MoveToAnotherTileBool(Vector3 tilePosition)
-    {
-        //transform.position = tilePosition;
-        //StartCoroutine(MovePlayerCoroutine(tilePosition));
-        while (!AlmostEqual(transform.position, tilePosition, 0.01f))
-        {
-            transform.position = Vector3.MoveTowards(
-            transform.position,
-            tilePosition,
-            0.1f
-            );
-        }
-        return true;
+        //await MoveBoxWithPlayer(tilePosition, box, boxNewPosition);
+        await StartCoroutine(PlayerPushesBoxCoroutine(tilePosition, box, boxNewPosition));
     }
 }
 
@@ -187,29 +120,8 @@ public static class AwaitExtensions
         return Task.Delay(timeSpan).GetAwaiter();
     }
 
-    public static TaskAwaiter GetAwaiter(this IEnumerator enumerator)
-    {
-        return Task.Delay(1).GetAwaiter();
-    }
-
     public static TaskAwaiter GetAwaiter(this Coroutine coroutine)
     {
-        return Task.Delay(1000).GetAwaiter();
-    }
-}
-
-public static class TaskExtensions
-{
-    public static IEnumerator AsIEnumerator(this Task task)
-    {
-        while (!task.IsCompleted)
-        {
-            yield return null;
-        }
-
-        if (task.IsFaulted)
-        {
-            throw task.Exception;
-        }
+        return Task.Delay(600).GetAwaiter();
     }
 }

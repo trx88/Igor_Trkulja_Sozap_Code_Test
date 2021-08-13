@@ -24,61 +24,17 @@ public enum EnumMovementDirection
 
 public class MapController : MonoBehaviour
 {
-    private const int tileSize = 1;
+    private const float SCREEN_OFFSET_PERCENT_X = 0.05f;
+    private const float SCREEN_OFFSET_PERCENT_Y = 0.9f;
+    private const int TILE_SIZE = 1;
 
-    #region Mocked map
-    private int mapWidth = 8;
-    private int mapHeight = 5;
-
-    private MapTileData[][] mapInput = new MapTileData[][]
-    {
-        new MapTileData[] 
-        { 
-            new MapTileData(0, EnumTileType.Wall), new MapTileData(1, EnumTileType.Wall), 
-            new MapTileData(2, EnumTileType.Wall), new MapTileData(3, EnumTileType.Wall), 
-            new MapTileData(4, EnumTileType.Wall), new MapTileData(5, EnumTileType.Wall), 
-            new MapTileData(6, EnumTileType.None), new MapTileData(7, EnumTileType.None)
-        },
-
-        new MapTileData[]
-        {
-            new MapTileData(8, EnumTileType.Wall), new MapTileData(9, EnumTileType.Target),
-            new MapTileData(10, EnumTileType.Grass), new MapTileData(11, EnumTileType.Grass),
-            new MapTileData(12, EnumTileType.Grass), new MapTileData(13, EnumTileType.Wall),
-            new MapTileData(14, EnumTileType.Wall), new MapTileData(15, EnumTileType.Wall)
-        },
-
-        new MapTileData[]
-        {
-            new MapTileData(16, EnumTileType.Wall), new MapTileData(17, EnumTileType.Grass),
-            new MapTileData(18, EnumTileType.Box), new MapTileData(19, EnumTileType.Grass),
-            new MapTileData(20, EnumTileType.Box), new MapTileData(21, EnumTileType.Grass),
-            new MapTileData(22, EnumTileType.Grass), new MapTileData(23, EnumTileType.Wall)
-        },
-
-        new MapTileData[]
-        {
-            new MapTileData(24, EnumTileType.Wall), new MapTileData(25, EnumTileType.Grass),
-            new MapTileData(26, EnumTileType.Target), new MapTileData(27, EnumTileType.Wall),
-            new MapTileData(28, EnumTileType.Player), new MapTileData(29, EnumTileType.Grass),
-            new MapTileData(30, EnumTileType.Grass), new MapTileData(31, EnumTileType.Wall)
-        },
-
-        new MapTileData[]
-        {
-            new MapTileData(32, EnumTileType.Wall), new MapTileData(33, EnumTileType.Wall),
-            new MapTileData(34, EnumTileType.Wall), new MapTileData(35, EnumTileType.Wall),
-            new MapTileData(36, EnumTileType.Wall), new MapTileData(37, EnumTileType.Wall),
-            new MapTileData(38, EnumTileType.Wall), new MapTileData(39, EnumTileType.Wall)
-        }
-    };
-    #endregion
+    private int mapWidth;
+    private int mapHeight;
 
     private Dictionary<int, MapTile> ProcessedTiles = new Dictionary<int, MapTile>();
-    private List<TerrainTile> PlacedTiles = new List<TerrainTile>();
-    private List<MapTile> MapTiles = new List<MapTile>();
     private Dictionary<int, MovableTile> MovableTiles = new Dictionary<int, MovableTile>();
     private Dictionary<int, List<MapTile>> TileNeighbors = new Dictionary<int, List<MapTile>>();
+    private List<MapTile> TargetTiles = new List<MapTile>();
 
     private List<NeighborsDirection> Directions = new List<NeighborsDirection>()
     {
@@ -103,18 +59,13 @@ public class MapController : MonoBehaviour
         {
             case EnumMovementDirection.Right:
                 return 1;
-                break;
             case EnumMovementDirection.Left:
                 return -1;
-                break;
             case EnumMovementDirection.Up:
                 return -mapWidth;
-                break;
             case EnumMovementDirection.Down:
                 return mapWidth;
-                break;
             default: return 0;
-                break;
         }
     }
 
@@ -187,22 +138,29 @@ public class MapController : MonoBehaviour
         {
             MovableTiles.Add(tileID, (MovableTile)tile);
         }
+        if(tile.TileType == EnumTileType.Target)
+        {
+            TargetTiles.Add(tile);
+        }
     }
 
     void PlaceTilesOnMap()
     {
-        for (int heightIndex = 0; heightIndex < mapInput.Length; heightIndex++)
-        {
-            for (int widthIndex = 0; widthIndex < mapInput[heightIndex].Length; widthIndex++)
-            {
-                //TODO: get rid of this
-                mapInput[heightIndex][widthIndex].SetPosition(widthIndex * tileSize, -heightIndex * tileSize);
-                mapInput[heightIndex][widthIndex].RowIndex = heightIndex;
-                mapInput[heightIndex][widthIndex].ColumnIndex = widthIndex;
+        MapData mapData = GetComponent<MapLoader>().LoadMapFromJSON(0);
+        mapWidth = mapData.mapWidth;
+        mapHeight = mapData.mapHeight;
 
-                var mapTile = MapTileSpawner.Instance.CreateTileFromData(mapInput[heightIndex][widthIndex], widthIndex * tileSize, -heightIndex * tileSize, mapParent);
+        for (int heightIndex = 0; heightIndex < mapData.mapHeight; heightIndex++)
+        {
+            for (int widthIndex = 0; widthIndex < mapData.mapWidth; widthIndex++)
+            {
+                int CalculatedTileID = heightIndex * mapWidth + widthIndex;
+
+                var mapTile = MapTileSpawner.Instance.CreateTileFromData(mapData.mapTilesData[CalculatedTileID], widthIndex * TILE_SIZE, -heightIndex * TILE_SIZE, mapParent);
+                mapTile.SetPosition(widthIndex * TILE_SIZE, -heightIndex * TILE_SIZE);
+                mapTile.RowIndex = heightIndex;
+                mapTile.ColumnIndex = widthIndex;
                 ProcessMapTile(mapTile.TileID, mapTile);
-                //MapTiles.Add(mapTile);
             }
         }
     }
@@ -216,9 +174,7 @@ public class MapController : MonoBehaviour
 
         PlayerReference = (PlayerTerrainTile)ProcessedTiles[MapTileSpawner.Instance.PlayerStartingTileID];
 
-        Vector3 topLeftPosition = new Vector3(Screen.width * 0.05f, Screen.height * 0.9f, 0);
-        mapParent.transform.position = Camera.main.ScreenToWorldPoint(topLeftPosition);
-        mapParent.transform.position = new Vector3(mapParent.transform.position.x, mapParent.transform.position.y, 0);
+        SetMapParentInTheWorld();
     }
 
     // Update is called once per frame
@@ -230,20 +186,26 @@ public class MapController : MonoBehaviour
         }
     }
 
-    //TEST
+    public void SetMapParentInTheWorld()
+    {
+        Vector3 topLeftPosition = new Vector3(Screen.width * SCREEN_OFFSET_PERCENT_X, Screen.height * SCREEN_OFFSET_PERCENT_Y, 0);
+        mapParent.transform.position = Camera.main.ScreenToWorldPoint(topLeftPosition);
+        mapParent.transform.position = new Vector3(mapParent.transform.position.x, mapParent.transform.position.y, 0);
+    }
+
     bool AreBoxesInPlace()
     {
-        int[] targetIDs = new int[2] { 9, 26 };
         int boxesInPlace = 0;
-        for(int i=0; i<2; i++)
+
+        for(int targetTileIndex=0; targetTileIndex < TargetTiles.Count; targetTileIndex++)
         {
-            if(MovableTiles.ContainsKey(targetIDs[i]))
+            if(MovableTiles.ContainsKey(TargetTiles[targetTileIndex].TileID))
             {
                 boxesInPlace++;
             }
         }
 
-        return boxesInPlace == 2;
+        return boxesInPlace == TargetTiles.Count;
     }
 
     public bool TryMove(EnumMovementDirection movementDirection, out PlayerTerrainTile playerTile, out Vector3 playerDestination, out MovableTile boxTile, out Vector3 boxDestination)
@@ -272,7 +234,7 @@ public class MapController : MonoBehaviour
             else if (neighbor.TileID == PlayerReference.CurrentTileID + CalculatedMovementDirection &&
                 neighbor.IsPushable)
             {
-                //Check if neighbor can be moved up
+                //Check if neighboring box can be moved in chosen direction
                 List<MapTile> boxNeighbors = GetNeighbors(neighbor);
                 foreach (MapTile boxNeighbor in boxNeighbors)
                 {
@@ -287,37 +249,21 @@ public class MapController : MonoBehaviour
                         playerTile = PlayerReference;
                         playerDestination = new Vector3(neighbor.PositionX, neighbor.PositionY, -1);
 
-                        //Using this, because everything is a pointer in C#...
-                        //boxTile = (MovableTile)MapTiles[neighbor.TileID];
-                        //boxTile.CurrentTileID = boxesNeighborCurrentID;
-                        //boxDestination = new Vector3(boxNeighbor.PositionX, boxNeighbor.PositionY, -1);
-
-                        //MapTile temp = MapTiles[neighbor.TileID];
-                        //MapTiles[neighbor.TileID] = MapTiles[boxNeighbor.TileID];
-                        //MapTiles[boxNeighbor.TileID] = temp;
-
                         boxTile = MovableTiles[neighbor.TileID];
                         boxTile.CurrentTileID = boxesNeighborCurrentID;
                         boxDestination = new Vector3(boxNeighbor.PositionX, boxNeighbor.PositionY, -1);
                         MovableTiles.Remove(neighbor.TileID);
                         MovableTiles.Add(boxTile.CurrentTileID, boxTile);
 
-                        EnumTileType boxCurrentType = ProcessedTiles[boxCurrentID].TileType;
-                        //EnumTileType boxesNeighborCurrentType = ProcessedTiles[boxesNeighborCurrentID].TileType;
-
-                        //ProcessedTiles[boxCurrentID].TurnInto(PlayerReference.TileType);//box to grass/target
-                        //ProcessedTiles[boxesNeighborCurrentID].TurnInto(EnumTileType.Box);//grass/target to box
-
                         if (ProcessedTiles[boxesNeighborCurrentID].TileType == EnumTileType.Target)
                         {
-                            ProcessedTiles[boxCurrentID].TurnInto(PlayerReference.TileType);//box to grass/target
+                            ProcessedTiles[boxCurrentID].TurnInto(PlayerReference.TileType);
                             ProcessedTiles[boxesNeighborCurrentID].TurnIntoPushable();
-                            //ProcessedTiles[boxCurrentID].TurnIntoTraversable();
                         }
                         else
                         {
-                            ProcessedTiles[boxCurrentID].TurnInto(PlayerReference.TileType);//box to grass/target
-                            ProcessedTiles[boxesNeighborCurrentID].TurnInto(EnumTileType.Box);//grass/target to box
+                            ProcessedTiles[boxCurrentID].TurnInto(PlayerReference.TileType);
+                            ProcessedTiles[boxesNeighborCurrentID].TurnInto(EnumTileType.Box);
                         }
 
                         canMove = true;

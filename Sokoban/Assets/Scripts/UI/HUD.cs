@@ -16,19 +16,24 @@ public class HUD : MonoBehaviour
     void Start()
     {
         secondsPlaying = 0;
+        StartCoroutine(TimerCoroutine());
     }
 
     // Update is called once per frame
     void Update()
     {
-        secondsPlaying = Time.fixedTime;
-        TimeSpan timeInGame = new TimeSpan(0, 0, (int)secondsPlaying);
-        //TextTimer.text = ((int)secondsPlaying).ToString("");
-        TextTimer.text = timeInGame.ToString(@"mm\:ss");
 
-        Vector3 zeroPosition = new Vector3(0, 0, -10);
-        Vector3 topLeftPosition = new Vector3(Screen.width * 0.05f, Screen.height * 0.9f, 0);
-        TextTest.text = string.Format("{0}\n{1}", topLeftPosition, Camera.main.ScreenToWorldPoint(topLeftPosition).ToString());
+    }
+
+    IEnumerator TimerCoroutine()
+    {
+        while (true)//TODO: Exchange with isLevelOver
+        {
+            secondsPlaying = Time.fixedTime;
+            TimeSpan timeInGame = new TimeSpan(0, 0, (int)secondsPlaying);
+            TextTimer.text = timeInGame.ToString(@"mm\:ss");
+            yield return null;
+        }
     }
 
     public void ResetCurrentLevel()

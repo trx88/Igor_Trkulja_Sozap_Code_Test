@@ -86,27 +86,22 @@ public class PlayerController : MonoBehaviour
     {
         if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name == UIButtonRight.gameObject.name)
         {
-            Debug.Log("ButtonRight");
             uiCommand = ButtonRight;
         }
         else if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name == UIButtonLeft.gameObject.name)
         {
-            Debug.Log("ButtonLeft");
             uiCommand = ButtonLeft;
         }
         else if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name == UIButtonUp.gameObject.name)
         {
-            Debug.Log("ButtonUp");
             uiCommand = ButtonUp;
         }
         else if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name == UIButtonDown.gameObject.name)
         {
-            Debug.Log("ButtonDown");
             uiCommand = ButtonDown;
         }
         else
         {
-            Debug.Log("UI silent");
             uiCommand = Idle;
         }
     }

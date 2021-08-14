@@ -146,7 +146,7 @@ public class MapController : MonoBehaviour
 
     void PlaceTilesOnMap()
     {
-        MapData mapData = GetComponent<MapLoader>().LoadMapFromJSON(0);
+        MapData mapData = GetComponent<MapLoader>().LoadMapFromJSON(LevelController.Instance.SelectedLevel);
         mapWidth = mapData.mapWidth;
         mapHeight = mapData.mapHeight;
 
@@ -168,6 +168,8 @@ public class MapController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log(string.Format("Selected level: {0}", LevelController.Instance.SelectedLevel));
+
         PlaceTilesOnMap();
 
         SetNeighborsForEachTile();
@@ -180,6 +182,7 @@ public class MapController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //count time in this class, and send it to UI from here.
         if(AreBoxesInPlace())
         {
             Debug.Log("LEVEL COMPLETED!");

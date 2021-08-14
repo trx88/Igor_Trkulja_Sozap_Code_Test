@@ -70,6 +70,7 @@ public class PlayerTerrainTile : MapTile, IMoveableTile
             (elapsedTime / moveTime)
             );
             elapsedTime += 0.01f;
+            //StartCoroutine(MovePlayerCoroutine(position));
 
             box.transform.localPosition = Vector3.Lerp(
             box.transform.localPosition,

@@ -4,7 +4,16 @@ using UnityEngine;
 
 //Used for loading maps from JSON
 public class MapLoader : MonoBehaviour
-{  
+{
+    private List<string> MapJSONs = new List<string>()
+    {
+        "/FirstMapData.json",
+        "/SecondMapData.json",
+        "/ThirdMapData.json",
+        "/ForthMapData.json",
+        "/FifthMapData.json"
+    };
+
     private void Awake()
     {
         
@@ -24,8 +33,8 @@ public class MapLoader : MonoBehaviour
 
     public MapData LoadMapFromJSON(int mapIndex)
     {
-        //string jsonAddress = Application.persistentDataPath + "/FirstMapData.json";
-        string jsonAddress = Application.persistentDataPath + "/SecondMapData.json";
+        string jsonAddress = Application.persistentDataPath + MapJSONs[mapIndex];
+        //string jsonAddress = Application.persistentDataPath + "/SecondMapData.json";
         //TODO: switch by index
 
         string jsonData = System.IO.File.ReadAllText(jsonAddress);

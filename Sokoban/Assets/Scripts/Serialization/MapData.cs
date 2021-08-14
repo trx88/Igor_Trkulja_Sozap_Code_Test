@@ -11,6 +11,7 @@ public class MapData
     //public List<MapTileData> mapTilesData;
     public List<MapTileData> mapTilesData = new List<MapTileData>()
     {
+            //Map1
             //new MapTileData(0, EnumTileType.Wall), new MapTileData(1, EnumTileType.Wall),
             //new MapTileData(2, EnumTileType.Wall), new MapTileData(3, EnumTileType.Wall),
             //new MapTileData(4, EnumTileType.Wall), new MapTileData(5, EnumTileType.Wall),
@@ -31,6 +32,8 @@ public class MapData
             //new MapTileData(34, EnumTileType.Wall), new MapTileData(35, EnumTileType.Wall),
             //new MapTileData(36, EnumTileType.Wall), new MapTileData(37, EnumTileType.Wall),
             //new MapTileData(38, EnumTileType.Wall), new MapTileData(39, EnumTileType.Wall)
+
+            //Map2
             new MapTileData(0, EnumTileType.Wall), new MapTileData(1, EnumTileType.Wall), new MapTileData(2, EnumTileType.Wall), new MapTileData(3, EnumTileType.Wall), new MapTileData(4, EnumTileType.Wall), new MapTileData(5, EnumTileType.None), new MapTileData(6, EnumTileType.None), new MapTileData(7, EnumTileType.None), new MapTileData(8, EnumTileType.None), new MapTileData(9, EnumTileType.None), new MapTileData(10, EnumTileType.None),
             new MapTileData(11, EnumTileType.Wall), new MapTileData(12, EnumTileType.Grass), new MapTileData(13, EnumTileType.Player), new MapTileData(14, EnumTileType.Grass), new MapTileData(15, EnumTileType.Wall), new MapTileData(16, EnumTileType.Wall), new MapTileData(17, EnumTileType.Wall), new MapTileData(18, EnumTileType.Wall), new MapTileData(19, EnumTileType.Wall), new MapTileData(20, EnumTileType.Wall), new MapTileData(21, EnumTileType.Wall),
             new MapTileData(22, EnumTileType.Wall), new MapTileData(23, EnumTileType.Grass), new MapTileData(24, EnumTileType.Box), new MapTileData(25, EnumTileType.Grass), new MapTileData(26, EnumTileType.Grass), new MapTileData(27, EnumTileType.Grass), new MapTileData(28, EnumTileType.Grass), new MapTileData(29, EnumTileType.Grass), new MapTileData(30, EnumTileType.Box), new MapTileData(31, EnumTileType.Grass), new MapTileData(32, EnumTileType.Wall),

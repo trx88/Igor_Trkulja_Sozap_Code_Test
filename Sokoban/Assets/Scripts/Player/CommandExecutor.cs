@@ -6,8 +6,16 @@ public class CommandExecutor : MonoBehaviour
 {
     private Command CommandToExecute = null;
 
-    //For testing only
-    public MapController mapController;
+    private MapController mapController;
+
+    public MapController MapControllerReference
+    {
+        get => mapController;
+        set
+        {
+            mapController = value;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -32,6 +40,14 @@ public class CommandExecutor : MonoBehaviour
         {
             CommandToExecute = command;
             CommandToExecute.Execute(mapController);
+
+            if(mapController.AreBoxesInPlace())
+            {
+                Debug.Log("LEVEL COMPLETED!");
+                mapController.CompleteLevel();
+                //stop the timer and write JSON
+                //reload scene with new level
+            }
         }
     }
 }

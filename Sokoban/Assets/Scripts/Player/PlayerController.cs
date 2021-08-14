@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
 
     private Command uiCommand = null;
 
+    public MapController mapController;
     public Button UIButtonRight;
     public Button UIButtonLeft;
     public Button UIButtonUp;
@@ -21,6 +22,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         commandExecutor = GetComponent<CommandExecutor>();
+        commandExecutor.MapControllerReference = mapController;
 
         Idle = new DoNothing();
         ArrowRight = new MoveRight();

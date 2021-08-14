@@ -24,6 +24,16 @@ public enum EnumMovementDirection
 
 public class MapController : MonoBehaviour
 {
+    //Move this to some level class
+    public delegate void NotifyUIAboutTime(int seconds);
+    public static event NotifyUIAboutTime OnNotifyUIAboutTime;
+    private int secondsPlaying;
+    private float timer = 0.0f;
+
+    //Move this to some level class
+    public delegate void LevelCompleted(int newLevelID);
+    public static event LevelCompleted OnLevelCompleted;
+
     private const float SCREEN_OFFSET_PERCENT_X = 0.05f;
     private const float SCREEN_OFFSET_PERCENT_Y = 0.9f;
     private const int TILE_SIZE = 1;
@@ -177,15 +187,27 @@ public class MapController : MonoBehaviour
         PlayerReference = (PlayerTerrainTile)ProcessedTiles[MapTileSpawner.Instance.PlayerStartingTileID];
 
         SetMapParentInTheWorld();
+
+        StartCoroutine(CountLevelTime());
     }
 
     // Update is called once per frame
     void Update()
     {
-        //count time in this class, and send it to UI from here.
-        if(AreBoxesInPlace())
+
+    }
+
+    IEnumerator CountLevelTime()
+    {
+        while(!AreBoxesInPlace())
         {
-            Debug.Log("LEVEL COMPLETED!");
+            timer += Time.deltaTime;
+            secondsPlaying = (int)(timer % 60);
+            if (OnNotifyUIAboutTime != null)
+            {
+                OnNotifyUIAboutTime(secondsPlaying);
+            }
+            yield return null;
         }
     }
 
@@ -196,7 +218,7 @@ public class MapController : MonoBehaviour
         mapParent.transform.position = new Vector3(mapParent.transform.position.x, mapParent.transform.position.y, 0);
     }
 
-    bool AreBoxesInPlace()
+    public bool AreBoxesInPlace()
     {
         int boxesInPlace = 0;
 
@@ -209,6 +231,13 @@ public class MapController : MonoBehaviour
         }
 
         return boxesInPlace == TargetTiles.Count;
+    }
+
+    public void CompleteLevel()
+    {
+        LevelController.Instance.UpdateLevelCollection(LevelController.Instance.SelectedLevel, 0, true, secondsPlaying);
+        LevelController.Instance.SelectedLevel++;
+        OnLevelCompleted(LevelController.Instance.SelectedLevel);
     }
 
     public bool TryMove(EnumMovementDirection movementDirection, out PlayerTerrainTile playerTile, out Vector3 playerDestination, out MovableTile boxTile, out Vector3 boxDestination)

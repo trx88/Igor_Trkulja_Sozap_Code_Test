@@ -15,16 +15,16 @@ public class MainMenuController : MonoBehaviour
     {
         LevelDataCollection levelDataCollection = LevelController.Instance.LoadLevelCollection();
 
-        for(int disableIndex = 1; disableIndex < levelDataCollection.LevelsData.Count; disableIndex++)
+        for(int disableIndex = 1; disableIndex < 5; disableIndex++)
         {
             dropdownController.indexesToDisable.Add(disableIndex);
         }
 
-        for (int levelIndex = 1; levelIndex < levelDataCollection.LevelsData.Count; levelIndex++)
+        for (int levelIndex = 0; levelIndex < levelDataCollection.LevelsData.Count - 1; levelIndex++)
         {
             if(levelDataCollection.LevelsData[levelIndex].IsCompleted)
             {
-                dropdownController.indexesToDisable.Remove(levelIndex);
+                dropdownController.indexesToDisable.Remove(levelIndex + 1);
             }
         }
     }

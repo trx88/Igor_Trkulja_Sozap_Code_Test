@@ -115,4 +115,12 @@ public class MainMenuController : MonoBehaviour
     {
         PlayerSettings.Instance.SetEffectsLevel(sliderEffects.value);
     }
+
+    /// <summary>
+    /// Quit button binding
+    /// </summary>
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 }

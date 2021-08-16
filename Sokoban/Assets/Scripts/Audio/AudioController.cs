@@ -49,13 +49,13 @@ public class AudioController : MonoBehaviour
         playerMovedEffect = player.GetComponent<AudioSource>();
 
         levelCompletedMusic.Stop();
-        levelPlayMusic.time = 2.0f;
         levelPlayMusic.Play();
     }
 
     private void LevelCompleted(int levelID)
     {
         levelPlayMusic.Stop();
+        levelCompletedMusic.time = 4.0f;//Sound starts from 0:04
         levelCompletedMusic.Play();
     }
 

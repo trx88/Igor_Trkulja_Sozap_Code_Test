@@ -40,12 +40,6 @@ public class LevelStatistics
         return levelStatisticsData;
     }
 
-    //public void SaveLevelStatistics(LevelDataCollection levelCollectionToSave)
-    //{
-    //    string levelCollection = JsonUtility.ToJson(levelCollectionToSave);
-    //    System.IO.File.WriteAllText(GameFilePaths.LevelStatisticsFileName, levelCollection);
-    //}
-
     /// <summary>
     /// Saves changes to level statistics file. Used on private variable when updating statistics (e.g. level completed, etc.)
     /// </summary>

@@ -84,6 +84,7 @@ public class HUD : MonoBehaviour
 
     public void ToMainMenu()
     {
+        LevelController.Instance.UpdateLevelStatisticsOnResetLevel(currentLevelID);
         SceneManager.LoadScene(0);
     }
 }

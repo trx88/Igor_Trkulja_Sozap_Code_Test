@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class LevelController : MonoBehaviour
 {
-    [SerializeField]
-    private LevelDataCollection levelDataCollection;
+    //[SerializeField]
+    //private LevelDataCollection levelDataCollection;
 
     private int selectedLevel;
     public int SelectedLevel

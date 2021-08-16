@@ -102,6 +102,11 @@ public class PlayerTerrainTile : MapTile, IMoveableTile
         //transform.position = tilePosition;
 
         //await MovePlayer(tilePosition);
+        AudioSource moveSound = GetComponent<AudioSource>();
+        if (moveSound)
+        {
+            moveSound.Play();
+        }
         await StartCoroutine(MovePlayerCoroutine(tilePosition));
     }
 
@@ -110,6 +115,11 @@ public class PlayerTerrainTile : MapTile, IMoveableTile
         //transform.position = tilePosition;
 
         //await MoveBoxWithPlayer(tilePosition, box, boxNewPosition);
+        AudioSource moveSound = GetComponent<AudioSource>();
+        if (moveSound)
+        {
+            moveSound.Play();
+        }
         await StartCoroutine(PlayerPushesBoxCoroutine(tilePosition, box, boxNewPosition));
     }
 }
@@ -123,6 +133,6 @@ public static class AwaitExtensions
 
     public static TaskAwaiter GetAwaiter(this Coroutine coroutine)
     {
-        return Task.Delay(600).GetAwaiter();
+        return Task.Delay(800).GetAwaiter();
     }
 }

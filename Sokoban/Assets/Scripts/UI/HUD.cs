@@ -7,19 +7,15 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-    float secondsPlaying;
-    float timer = 0.0f;
     public Text TextTimer;
     public Button ButtonNext;
 
     private int currentLevelID;
+    private int secondsInLevel;
 
     // Start is called before the first frame update
     void Start()
     {
-        secondsPlaying = 0;
-        timer = 0.0f;
-        //StartCoroutine(TimerCoroutine());
         TextTimer.text = "Elapsed time: " + new TimeSpan(0,0,0).ToString(@"mm\:ss");
         MapController.OnNotifyUIAboutTime += UpdateTimer;
         MapController.OnLevelCompleted += LevelCompleted;
@@ -41,13 +37,21 @@ public class HUD : MonoBehaviour
 
     private void UpdateTimer(int seconds)
     {
-        TimeSpan timeInLevel = new TimeSpan(0, 0, (int)seconds);
+        secondsInLevel = seconds;
+        TimeSpan timeInLevel = new TimeSpan(0, 0, (int)secondsInLevel);
         TextTimer.text = "Elapsed time: " + timeInLevel.ToString(@"mm\:ss");
     }
 
     private void LevelCompleted(int nextLevelID)
     {
-        ToggleButtonNext(true);
+        if(LevelController.Instance.CanLoadNewLevel())
+        {
+            ToggleButtonNext(true);
+        }
+        else
+        {
+            ToggleButtonNext(false);
+        }
     }
 
     private void ToggleButtonNext(bool showButton)
@@ -74,6 +78,7 @@ public class HUD : MonoBehaviour
     public void ResetCurrentLevel()
     {
         LevelController.Instance.SelectedLevel = currentLevelID;
+        LevelController.Instance.UpdateLevelStatisticsOnResetLevel(currentLevelID);
         SceneManager.LoadScene(1);
     }
 

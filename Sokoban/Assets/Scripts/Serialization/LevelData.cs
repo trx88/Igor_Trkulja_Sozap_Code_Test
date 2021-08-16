@@ -14,5 +14,5 @@ public class LevelData
 
     public int BestCompletedTimeInSeconds;
 
-    public string MapJSONName;
+    public int MapID;
 }

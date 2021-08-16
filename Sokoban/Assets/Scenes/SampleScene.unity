@@ -155,10 +155,10 @@ RectTransform:
   m_Father: {fileID: 376667419}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -300, y: -50}
-  m_SizeDelta: {x: 200, y: 30}
+  m_AnchorMin: {x: 0.1, y: 0.85}
+  m_AnchorMax: {x: 0.6, y: 0.916}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &328856193
 MonoBehaviour:
@@ -312,6 +312,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapParent: {fileID: 1566855609}
+  AudioLevelPlayMusic: {fileID: 1689116132}
+  AudioLevelCompletedMusic: {fileID: 1117974307}
 --- !u!4 &430962726
 Transform:
   m_ObjectHideFlags: 0
@@ -414,7 +416,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 7
+  orthographic size: 8
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -492,10 +494,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -678,449 +680,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 547837926}
   m_CullTransparentMesh: 1
---- !u!1 &553070513
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 553070515}
-  - component: {fileID: 553070516}
-  m_Layer: 0
-  m_Name: Test
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &553070515
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 553070513}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 855.8781, y: 356.55957, z: -773.8797}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &553070516
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 553070513}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a7a38167559a7d541ae737b4275028fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mapData:
-    mapWidth: 11
-    mapHeight: 9
-    mapTilesData:
-    - TileID: 0
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 1
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 2
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 3
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 4
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 5
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 5
-    - TileID: 6
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 5
-    - TileID: 7
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 5
-    - TileID: 8
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 5
-    - TileID: 9
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 5
-    - TileID: 10
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 5
-    - TileID: 11
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 12
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 1
-    - TileID: 13
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 4
-    - TileID: 14
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 1
-    - TileID: 15
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 16
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 17
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 18
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 19
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 20
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 21
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 22
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 23
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 1
-    - TileID: 24
-      IsTraversable: 0
-      IsPushable: 1
-      TileType: 2
-    - TileID: 25
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 1
-    - TileID: 26
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 1
-    - TileID: 27
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 1
-    - TileID: 28
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 1
-    - TileID: 29
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 1
-    - TileID: 30
-      IsTraversable: 0
-      IsPushable: 1
-      TileType: 2
-    - TileID: 31
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 1
-    - TileID: 32
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 33
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 34
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 35
-      IsTraversable: 0
-      IsPushable: 1
-      TileType: 2
-    - TileID: 36
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 37
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 38
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 39
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 40
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 3
-    - TileID: 41
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 42
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 1
-    - TileID: 43
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 44
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 45
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 1
-    - TileID: 46
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 1
-    - TileID: 47
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 1
-    - TileID: 48
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 1
-    - TileID: 49
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 1
-    - TileID: 50
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 3
-    - TileID: 51
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 3
-    - TileID: 52
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 3
-    - TileID: 53
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 1
-    - TileID: 54
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 55
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 56
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 1
-    - TileID: 57
-      IsTraversable: 0
-      IsPushable: 1
-      TileType: 2
-    - TileID: 58
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 1
-    - TileID: 59
-      IsTraversable: 0
-      IsPushable: 1
-      TileType: 2
-    - TileID: 60
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 1
-    - TileID: 61
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 62
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 3
-    - TileID: 63
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 64
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 65
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 66
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 67
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 68
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 69
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 70
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 71
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 1
-    - TileID: 72
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 1
-    - TileID: 73
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 1
-    - TileID: 74
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 1
-    - TileID: 75
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 76
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 5
-    - TileID: 77
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 5
-    - TileID: 78
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 5
-    - TileID: 79
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 5
-    - TileID: 80
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 5
-    - TileID: 81
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 82
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 83
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 1
-    - TileID: 84
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 1
-    - TileID: 85
-      IsTraversable: 1
-      IsPushable: 0
-      TileType: 1
-    - TileID: 86
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 87
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 5
-    - TileID: 88
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 5
-    - TileID: 89
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 5
-    - TileID: 90
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 5
-    - TileID: 91
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 5
-    - TileID: 92
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 5
-    - TileID: 93
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 94
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 95
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 96
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 97
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 0
-    - TileID: 98
-      IsTraversable: 0
-      IsPushable: 0
-      TileType: 5
 --- !u!1 &593586595
 GameObject:
   m_ObjectHideFlags: 0
@@ -1398,6 +957,133 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1117974306
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1117974308}
+  - component: {fileID: 1117974307}
+  m_Layer: 0
+  m_Name: LevelCompletedMusic
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!82 &1117974307
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1117974306}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 05f22e57744ba9d4a89ee3b51cbe0547, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!4 &1117974308
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1117974306}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1119484695
 GameObject:
@@ -2310,6 +1996,133 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1629371142}
   m_CullTransparentMesh: 1
+--- !u!1 &1689116131
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1689116133}
+  - component: {fileID: 1689116132}
+  m_Layer: 0
+  m_Name: LevelPlayMusic
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!82 &1689116132
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1689116131}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: d677a81ffa713af46a97971b214c4889, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!4 &1689116133
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1689116131}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1840000449
 GameObject:
   m_ObjectHideFlags: 0
@@ -2603,7 +2416,7 @@ RectTransform:
   m_Father: {fileID: 376667419}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.35, y: 0}
+  m_AnchorMin: {x: 0.35, y: 0.05}
   m_AnchorMax: {x: 1, y: 0.3}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}

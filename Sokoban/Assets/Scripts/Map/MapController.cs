@@ -56,7 +56,12 @@ public class MapController : MonoBehaviour
 
     public Transform mapParent;
 
+    public AudioSource AudioLevelPlayMusic;
+    public AudioSource AudioLevelCompletedMusic;
+
     private PlayerTerrainTile PlayerReference;
+
+    //private PlayerSettings playerSettings;
 
     public PlayerTerrainTile GetPlayerTile()
     {
@@ -186,6 +191,12 @@ public class MapController : MonoBehaviour
 
         PlayerReference = (PlayerTerrainTile)ProcessedTiles[MapTileSpawner.Instance.PlayerStartingTileID];
 
+        //playerSettings = GetComponent<PlayerSettings>();
+        AudioLevelPlayMusic.volume = PlayerSettings.Instance.GetMusicLevel();
+        AudioLevelCompletedMusic.volume = PlayerSettings.Instance.GetMusicLevel() / 2;
+        PlayerReference.GetComponent<AudioSource>().volume = PlayerSettings.Instance.GetEffectsLevel();
+        AudioLevelCompletedMusic.Stop();
+
         SetMapParentInTheWorld();
 
         StartCoroutine(CountLevelTime());
@@ -235,7 +246,11 @@ public class MapController : MonoBehaviour
 
     public void CompleteLevel()
     {
-        LevelController.Instance.UpdateLevelCollection(LevelController.Instance.SelectedLevel, 0, true, secondsPlaying);
+        AudioLevelPlayMusic.Stop();
+        AudioLevelCompletedMusic.time = 4.0f;
+        AudioLevelCompletedMusic.Play();
+
+        LevelController.Instance.UpdateLevelStatistics(LevelController.Instance.SelectedLevel, true, secondsPlaying);
         LevelController.Instance.SelectedLevel++;
         OnLevelCompleted(LevelController.Instance.SelectedLevel);
     }
@@ -289,6 +304,16 @@ public class MapController : MonoBehaviour
 
                         if (ProcessedTiles[boxesNeighborCurrentID].TileType == EnumTileType.Target)
                         {
+                            //TEST
+                            var particles = ProcessedTiles[boxesNeighborCurrentID].GetComponent<ParticleSystem>();
+                            if (particles != null)
+                            {
+                                if (!particles.isPlaying)
+                                {
+                                    particles.Play();
+                                }
+                            }
+
                             ProcessedTiles[boxCurrentID].TurnInto(PlayerReference.TileType);
                             ProcessedTiles[boxesNeighborCurrentID].TurnIntoPushable();
                         }

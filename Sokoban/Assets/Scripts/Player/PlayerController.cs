@@ -6,7 +6,7 @@ using UnityEngine.UI;
 //Handles player input.
 public class PlayerController : MonoBehaviour
 {
-    Command Idle, ArrowRight, ArrowLeft, ArrowUp, ArrowDown, ButtonRight, ButtonLeft, ButtonUp, ButtonDown;
+    Command Idle, CommandRight, CommandLeft, CommandUp, CommandDown;
 
     private CommandExecutor commandExecutor;
 
@@ -25,14 +25,10 @@ public class PlayerController : MonoBehaviour
         commandExecutor.MapControllerReference = mapController;
 
         Idle = new DoNothing();
-        ArrowRight = new MoveRight();
-        ArrowLeft = new MoveLeft();
-        ArrowUp = new MoveUp();
-        ArrowDown = new MoveDown();
-        ButtonRight = new MoveRight();
-        ButtonLeft = new MoveLeft();
-        ButtonUp = new MoveUp();
-        ButtonDown = new MoveDown();
+        CommandRight = new MoveRight();
+        CommandLeft = new MoveLeft();
+        CommandUp = new MoveUp();
+        CommandDown = new MoveDown();
     }
 
     // Update is called once per frame
@@ -60,23 +56,23 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    Command HandleInput()
+    Command HandleInput(GameObject gameObject = null)
     {
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyUp(KeyCode.RightArrow) || gameObject?.name == UIButtonRight.gameObject.name)
         {
-            return ArrowRight;
+            return CommandRight;
         }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        else if (Input.GetKeyUp(KeyCode.LeftArrow) || gameObject?.name == UIButtonLeft.gameObject.name)
         {
-            return ArrowLeft;
+            return CommandLeft;
         }
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        else if (Input.GetKeyUp(KeyCode.UpArrow) || gameObject?.name == UIButtonUp.gameObject.name)
         {
-            return ArrowUp;
+            return CommandUp;
         }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        else if (Input.GetKeyUp(KeyCode.DownArrow) || gameObject?.name == UIButtonDown.gameObject.name)
         {
-            return ArrowDown;
+            return CommandDown;
         }
         else
         {
@@ -86,26 +82,7 @@ public class PlayerController : MonoBehaviour
 
     public void HandleUIInput()
     {
-        if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name == UIButtonRight.gameObject.name)
-        {
-            uiCommand = ButtonRight;
-        }
-        else if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name == UIButtonLeft.gameObject.name)
-        {
-            uiCommand = ButtonLeft;
-        }
-        else if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name == UIButtonUp.gameObject.name)
-        {
-            uiCommand = ButtonUp;
-        }
-        else if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name == UIButtonDown.gameObject.name)
-        {
-            uiCommand = ButtonDown;
-        }
-        else
-        {
-            uiCommand = Idle;
-        }
+        uiCommand = HandleInput(UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject);
     }
 
     Command GetUICommand()

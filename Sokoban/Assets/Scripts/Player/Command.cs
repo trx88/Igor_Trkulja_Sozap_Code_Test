@@ -7,33 +7,28 @@ public abstract class Command
     public bool CommandCompleted = false;
 
     public abstract void Execute(MapController mapController);
+}
 
-    public virtual void Move(MapController mapController)
+public abstract class MoveCommand : Command
+{
+    public override void Execute(MapController mapController)
     {
-
+        Move(mapController);
     }
+
+    public abstract void Move(MapController mapController);
 }
 
 public class DoNothing : Command
 {
     public override void Execute(MapController mapController)
     {
-        Move(mapController);
-    }
-
-    public override void Move(MapController mapController)
-    {
         Debug.Log("Waiting...");
     }
 }
 
-public class MoveRight : Command
+public class MoveRight : MoveCommand
 {
-    public override void Execute(MapController mapController)
-    {
-        Move(mapController);
-    }
-
     public async override void Move(MapController mapController)
     {
         CommandCompleted = false;
@@ -64,13 +59,8 @@ public class MoveRight : Command
     }
 }
 
-public class MoveLeft : Command
+public class MoveLeft : MoveCommand
 {
-    public override void Execute(MapController mapController)
-    {
-        Move(mapController);
-    }
-
     public async override void Move(MapController mapController)
     {
         CommandCompleted = false;
@@ -101,13 +91,8 @@ public class MoveLeft : Command
     }
 }
 
-public class MoveUp : Command
+public class MoveUp : MoveCommand
 {
-    public override void Execute(MapController mapController)
-    {
-        Move(mapController);
-    }
-
     public async override void Move(MapController mapController)
     {
         CommandCompleted = false;
@@ -138,13 +123,8 @@ public class MoveUp : Command
     }
 }
 
-public class MoveDown : Command
+public class MoveDown : MoveCommand
 {
-    public override void Execute(MapController mapController)
-    {
-        Move(mapController);
-    }
-
     public async override void Move(MapController mapController)
     {
         CommandCompleted = false;

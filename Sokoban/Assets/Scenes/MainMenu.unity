@@ -3969,7 +3969,7 @@ MonoBehaviour:
       IsTraversable: 0
       IsPushable: 0
       TileType: 5
-  useScriptableObjectsToCreateMap: 0
+  useScriptableObjectsToCreateMap: 1
   scriptableObjectMaps:
   - {fileID: 11400000, guid: be222e22173c6614e9a273920db6f172, type: 2}
 --- !u!1 &867185168

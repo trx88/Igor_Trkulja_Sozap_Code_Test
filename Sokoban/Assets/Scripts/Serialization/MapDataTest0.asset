@@ -41,12 +41,12 @@ MonoBehaviour:
       IsPushable: 0
       TileType: 0
     - TileID: 6
-      IsTraversable: 0
+      IsTraversable: 1
       IsPushable: 0
       TileType: 3
     - TileID: 7
       IsTraversable: 0
-      IsPushable: 0
+      IsPushable: 1
       TileType: 2
     - TileID: 8
       IsTraversable: 0

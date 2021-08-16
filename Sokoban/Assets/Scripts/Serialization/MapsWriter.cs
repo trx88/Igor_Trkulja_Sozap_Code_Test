@@ -86,26 +86,100 @@ public class MapsWriter : MonoBehaviour
         }
     };
 
+    public bool useScriptableObjectsToCreateMap;
+    public List<ScriptableObjectTest> scriptableObjectMaps;
+
+    private LevelDataCollection levelCollection = new LevelDataCollection();
+    private List<LevelData> levelData = new List<LevelData>();
+
     public void SaveAllMapsToJSON()
     {
+        bool mapsAlreadyExist = true;
         int mapID = -1;
 
         foreach (MapData mapData in AllMaps)
         {
             mapID++;
-            string mapJSON = JsonUtility.ToJson(mapData);
-            System.IO.File.WriteAllText(GameFilePaths.MapFileName(mapID), mapJSON);
+
+            if (!System.IO.File.Exists(GameFilePaths.MapFileName(mapID)))
+            {
+                levelData.Add(new LevelData
+                {
+                    LevelName = string.Format("Level {0}", mapID),
+                    MapID = mapID,
+                    IsCompleted = false,
+                    NumbersPlayed = 0,
+                    BestCompletedTimeInSeconds = -1
+                });
+
+                string mapJSON = JsonUtility.ToJson(mapData);
+                System.IO.File.WriteAllText(GameFilePaths.MapFileName(mapID), mapJSON);
+
+                mapsAlreadyExist = false;
+            }
+        }
+
+        if(!mapsAlreadyExist)
+        {
+            levelCollection.LevelsData = levelData;
+            LevelController.Instance.CreateInitialLevelCollectionFromMaps(levelCollection);
+        }
+    }
+
+    public void SaveAllMapsToJSONFromScriptableObjects()
+    {
+        bool mapsAlreadyExist = true;
+        int mapID = -1;
+
+        foreach (ScriptableObjectTest scriptableObjectData in scriptableObjectMaps)
+        {
+            mapID++;
+
+            if (!System.IO.File.Exists(GameFilePaths.MapFileName(mapID)))
+            {
+                levelData.Add(new LevelData
+                {
+                    LevelName = string.Format("Level {0}", mapID),
+                    MapID = mapID,
+                    IsCompleted = false,
+                    NumbersPlayed = 0,
+                    BestCompletedTimeInSeconds = -1
+                });
+
+                string mapJSON = JsonUtility.ToJson(scriptableObjectData.mapData);
+                System.IO.File.WriteAllText(GameFilePaths.MapFileName(mapID), mapJSON);
+
+                mapsAlreadyExist = false;
+            }
+        }
+
+        if (!mapsAlreadyExist)
+        {
+            levelCollection.LevelsData = levelData;
+            LevelController.Instance.CreateInitialLevelCollectionFromMaps(levelCollection);
+        }
+    }
+
+    private void Awake()
+    {
+        if(!useScriptableObjectsToCreateMap)
+        {
+            AllMaps.Add(mapData0);
+            AllMaps.Add(mapData1);
+            AllMaps.Add(mapData2);
+            AllMaps.Add(mapData3);
+            SaveAllMapsToJSON();
+        }
+        else
+        {
+            SaveAllMapsToJSONFromScriptableObjects();
         }
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        AllMaps.Add(mapData0);
-        AllMaps.Add(mapData1);
-        AllMaps.Add(mapData2);
-        AllMaps.Add(mapData3);
-        SaveAllMapsToJSON();
+        
     }
 
     // Update is called once per frame

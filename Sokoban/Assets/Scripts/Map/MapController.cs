@@ -24,19 +24,21 @@ public enum EnumMovementDirection
 
 public class MapController : MonoBehaviour
 {
-    //Move this to some level class
     public delegate void NotifyUIAboutTime(int seconds);
     public static event NotifyUIAboutTime OnNotifyUIAboutTime;
-    private int secondsPlaying;
-    private float timer = 0.0f;
 
-    //Move this to some level class
     public delegate void LevelCompleted(int newLevelID);
     public static event LevelCompleted OnLevelCompleted;
+
+    public delegate void LevelStarted(PlayerTerrainTile player);
+    public static event LevelStarted OnLevelStarted;
 
     private const float SCREEN_OFFSET_PERCENT_X = 0.05f;
     private const float SCREEN_OFFSET_PERCENT_Y = 0.9f;
     private const int TILE_SIZE = 1;
+
+    private int secondsPlaying;
+    private float timer = 0.0f;
 
     private int mapWidth;
     private int mapHeight;
@@ -56,12 +58,7 @@ public class MapController : MonoBehaviour
 
     public Transform mapParent;
 
-    public AudioSource AudioLevelPlayMusic;
-    public AudioSource AudioLevelCompletedMusic;
-
     private PlayerTerrainTile PlayerReference;
-
-    //private PlayerSettings playerSettings;
 
     public PlayerTerrainTile GetPlayerTile()
     {
@@ -191,15 +188,11 @@ public class MapController : MonoBehaviour
 
         PlayerReference = (PlayerTerrainTile)ProcessedTiles[MapTileSpawner.Instance.PlayerStartingTileID];
 
-        //playerSettings = GetComponent<PlayerSettings>();
-        AudioLevelPlayMusic.volume = PlayerSettings.Instance.GetMusicLevel();
-        AudioLevelCompletedMusic.volume = PlayerSettings.Instance.GetMusicLevel();
-        PlayerReference.GetComponent<AudioSource>().volume = PlayerSettings.Instance.GetEffectsLevel();
-        AudioLevelCompletedMusic.Stop();
-
         SetMapParentInTheWorld();
 
         StartCoroutine(CountLevelTime());
+
+        OnLevelStarted(PlayerReference);
     }
 
     // Update is called once per frame
@@ -246,10 +239,6 @@ public class MapController : MonoBehaviour
 
     public void CompleteLevel()
     {
-        AudioLevelPlayMusic.Stop();
-        AudioLevelCompletedMusic.time = 4.0f;
-        AudioLevelCompletedMusic.Play();
-
         LevelController.Instance.UpdateLevelStatistics(LevelController.Instance.SelectedLevel, true, secondsPlaying);
         LevelController.Instance.SelectedLevel++;
         OnLevelCompleted(LevelController.Instance.SelectedLevel);

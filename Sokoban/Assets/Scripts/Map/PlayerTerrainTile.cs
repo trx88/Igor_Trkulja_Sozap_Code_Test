@@ -7,6 +7,9 @@ using UnityEngine;
 
 public class PlayerTerrainTile : MapTile, IMoveableTile
 {
+    public delegate void MoveMade();
+    public static event MoveMade OnMoveMade;
+
     public void PrepareTile(MapTileData tileData)
     {
         base.PrepareTile(tileData);
@@ -102,11 +105,12 @@ public class PlayerTerrainTile : MapTile, IMoveableTile
         //transform.position = tilePosition;
 
         //await MovePlayer(tilePosition);
-        AudioSource moveSound = GetComponent<AudioSource>();
-        if (moveSound)
-        {
-            moveSound.Play();
-        }
+        //AudioSource moveSound = GetComponent<AudioSource>();
+        //if (moveSound)
+        //{
+        //    moveSound.Play();
+        //}
+        OnMoveMade();
         await StartCoroutine(MovePlayerCoroutine(tilePosition));
     }
 
@@ -115,11 +119,12 @@ public class PlayerTerrainTile : MapTile, IMoveableTile
         //transform.position = tilePosition;
 
         //await MoveBoxWithPlayer(tilePosition, box, boxNewPosition);
-        AudioSource moveSound = GetComponent<AudioSource>();
-        if (moveSound)
-        {
-            moveSound.Play();
-        }
+        //AudioSource moveSound = GetComponent<AudioSource>();
+        //if (moveSound)
+        //{
+        //    moveSound.Play();
+        //}
+        OnMoveMade();
         await StartCoroutine(PlayerPushesBoxCoroutine(tilePosition, box, boxNewPosition));
     }
 }

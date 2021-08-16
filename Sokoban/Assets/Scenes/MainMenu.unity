@@ -1442,8 +1442,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 793479267}
-  - component: {fileID: 793479266}
   - component: {fileID: 793479268}
+  - component: {fileID: 793479266}
   m_Layer: 0
   m_Name: LevelController
   m_TagString: Untagged
@@ -3991,6 +3991,9 @@ MonoBehaviour:
       IsTraversable: 0
       IsPushable: 0
       TileType: 5
+  useScriptableObjectsToCreateMap: 0
+  scriptableObjectMaps:
+  - {fileID: 11400000, guid: be222e22173c6614e9a273920db6f172, type: 2}
 --- !u!1 &867185168
 GameObject:
   m_ObjectHideFlags: 0

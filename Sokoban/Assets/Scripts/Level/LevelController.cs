@@ -44,24 +44,36 @@ public class LevelController : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         instance = this;
 
-        if (!levelStatistics.LevelCollectionJSONExists())
-        {
-            levelStatistics.CreateInitialLevelCollection(levelDataCollection);
-        }
+        //if (!levelStatistics.LevelCollectionJSONExists())
+        //{
+        //    levelStatistics.CreateInitialLevelCollection(levelDataCollection);
+        //}
 
-        loadedLevelDataCollection = levelStatistics.LoadLevelCollection();
+        if (levelStatistics.LevelCollectionJSONExists())
+        {
+            loadedLevelDataCollection = levelStatistics.LoadLevelCollection();
+        }
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public void CreateInitialLevelCollectionFromMaps(LevelDataCollection levelCollection)
+    {
+        if (!levelStatistics.LevelCollectionJSONExists())
+        {
+            levelStatistics.CreateInitialLevelCollection(levelCollection);
+            loadedLevelDataCollection = levelStatistics.LoadLevelCollection();
+        }
     }
 
     public void UpdateLevelStatistics(int levelID, bool isCompleted, int lastTime)

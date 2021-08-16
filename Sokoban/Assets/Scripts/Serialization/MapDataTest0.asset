@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 775b1d34237e619449403854d26bcca7, type: 3}
+  m_Name: MapDataTest0
+  m_EditorClassIdentifier: 
+  mapData:
+    mapWidth: 5
+    mapHeight: 3
+    mapTilesData:
+    - TileID: 0
+      IsTraversable: 0
+      IsPushable: 0
+      TileType: 0
+    - TileID: 1
+      IsTraversable: 0
+      IsPushable: 0
+      TileType: 0
+    - TileID: 2
+      IsTraversable: 0
+      IsPushable: 0
+      TileType: 0
+    - TileID: 3
+      IsTraversable: 0
+      IsPushable: 0
+      TileType: 0
+    - TileID: 4
+      IsTraversable: 0
+      IsPushable: 0
+      TileType: 0
+    - TileID: 5
+      IsTraversable: 0
+      IsPushable: 0
+      TileType: 0
+    - TileID: 6
+      IsTraversable: 0
+      IsPushable: 0
+      TileType: 3
+    - TileID: 7
+      IsTraversable: 0
+      IsPushable: 0
+      TileType: 2
+    - TileID: 8
+      IsTraversable: 0
+      IsPushable: 0
+      TileType: 4
+    - TileID: 9
+      IsTraversable: 0
+      IsPushable: 0
+      TileType: 0
+    - TileID: 10
+      IsTraversable: 0
+      IsPushable: 0
+      TileType: 0
+    - TileID: 11
+      IsTraversable: 0
+      IsPushable: 0
+      TileType: 0
+    - TileID: 12
+      IsTraversable: 0
+      IsPushable: 0
+      TileType: 0
+    - TileID: 13
+      IsTraversable: 0
+      IsPushable: 0
+      TileType: 0
+    - TileID: 14
+      IsTraversable: 0
+      IsPushable: 0
+      TileType: 0

@@ -30,7 +30,7 @@ public class MapController : MonoBehaviour
     public delegate void LevelCompleted(int newLevelID);
     public static event LevelCompleted OnLevelCompleted;
 
-    public delegate void LevelStarted(PlayerTerrainTile player);
+    public delegate void LevelStarted(PlayerTile player);
     public static event LevelStarted OnLevelStarted;
 
     private const float SCREEN_OFFSET_PERCENT_X = 0.05f;
@@ -43,12 +43,12 @@ public class MapController : MonoBehaviour
     private int mapWidth;
     private int mapHeight;
 
-    private Dictionary<int, MapTile> ProcessedTiles = new Dictionary<int, MapTile>();
-    private Dictionary<int, MovableTile> MovableTiles = new Dictionary<int, MovableTile>();
-    private Dictionary<int, List<MapTile>> TileNeighbors = new Dictionary<int, List<MapTile>>();
-    private List<MapTile> TargetTiles = new List<MapTile>();
+    private Dictionary<int, MapTile> processedTiles = new Dictionary<int, MapTile>();
+    private Dictionary<int, MovableTile> movableTiles = new Dictionary<int, MovableTile>();
+    private Dictionary<int, List<MapTile>> tileNeighbors = new Dictionary<int, List<MapTile>>();
+    private List<MapTile> targetTiles = new List<MapTile>();
 
-    private List<NeighborsDirection> Directions = new List<NeighborsDirection>()
+    private List<NeighborsDirection> directions = new List<NeighborsDirection>()
     {
         new NeighborsDirection(1, 0), //right
         new NeighborsDirection(-1, 0), //left
@@ -58,11 +58,11 @@ public class MapController : MonoBehaviour
 
     public Transform mapParent;
 
-    private PlayerTerrainTile PlayerReference;
+    private PlayerTile playerReference;
 
-    public PlayerTerrainTile GetPlayerTile()
+    public PlayerTile GetPlayerTile()
     {
-        return PlayerReference;
+        return playerReference;
     }
 
     int CalculateMapOffsetForMovement(EnumMovementDirection movementDirection)
@@ -94,16 +94,17 @@ public class MapController : MonoBehaviour
     {
         List<MapTile> neighbors = new List<MapTile>();
 
-        foreach(NeighborsDirection direction in Directions)
+        foreach(NeighborsDirection direction in directions)
         {
             if(IsNeighborInsideTheMap(tile, direction))
             {
                 int widthIndex = tile.PositionX + direction.X;
-                int heightIndex = Mathf.Abs(tile.PositionY - direction.Y);
+                int heightIndex = Mathf.Abs(tile.PositionY - direction.Y);//Minus, because map tiles are being place from top-left corner
 
-                //TODO: Comment on this (explain the "magic number")
+                //TODO: Comment on this 
+                //(explain the "magic number") -> Get the row start index (heightIndex * mapWidth) and add current widthIndex
                 int CalculatedTileID = heightIndex * mapWidth + widthIndex;
-                neighbors.Add(ProcessedTiles[CalculatedTileID]);
+                neighbors.Add(processedTiles[CalculatedTileID]);
             }
         }
 
@@ -112,10 +113,10 @@ public class MapController : MonoBehaviour
 
     void SetNeighborsForEachTile()
     {
-        foreach (MapTile tile in ProcessedTiles.Values)
+        foreach (MapTile tile in processedTiles.Values)
         {
             var neighbours = FindTileNeighbors(tile);
-            TileNeighbors.Add(tile.TileID, neighbours);
+            tileNeighbors.Add(tile.TileID, neighbours);
         }
     }
 
@@ -123,7 +124,7 @@ public class MapController : MonoBehaviour
     {
         List<MapTile> neighbors = new List<MapTile>();
 
-        if (TileNeighbors.TryGetValue(tile.TileID, out neighbors))
+        if (tileNeighbors.TryGetValue(tile.TileID, out neighbors))
         {
             return neighbors;
         }
@@ -135,7 +136,7 @@ public class MapController : MonoBehaviour
     {
         List<MapTile> neighbors = new List<MapTile>();
 
-        if(TileNeighbors.TryGetValue(PlayerReference.CurrentTileID, out neighbors))
+        if(tileNeighbors.TryGetValue(playerReference.CurrentTileID, out neighbors))
         {
             return neighbors;
         }
@@ -145,14 +146,14 @@ public class MapController : MonoBehaviour
 
     void ProcessMapTile(int tileID, MapTile tile)
     {
-        ProcessedTiles.Add(tileID, tile);
+        processedTiles.Add(tileID, tile);
         if(tile.GetType() == typeof(MovableTile))
         {
-            MovableTiles.Add(tileID, (MovableTile)tile);
+            movableTiles.Add(tileID, (MovableTile)tile);
         }
         if(tile.TileType == EnumTileType.Target)
         {
-            TargetTiles.Add(tile);
+            targetTiles.Add(tile);
         }
     }
 
@@ -186,13 +187,13 @@ public class MapController : MonoBehaviour
 
         SetNeighborsForEachTile();
 
-        PlayerReference = (PlayerTerrainTile)ProcessedTiles[MapTileSpawner.Instance.PlayerStartingTileID];
+        playerReference = (PlayerTile)processedTiles[MapTileSpawner.Instance.PlayerStartingTileID];
 
         SetMapParentInTheWorld();
 
         StartCoroutine(CountLevelTime());
 
-        OnLevelStarted(PlayerReference);
+        OnLevelStarted(playerReference);
     }
 
     // Update is called once per frame
@@ -226,15 +227,15 @@ public class MapController : MonoBehaviour
     {
         int boxesInPlace = 0;
 
-        for(int targetTileIndex=0; targetTileIndex < TargetTiles.Count; targetTileIndex++)
+        for(int targetTileIndex=0; targetTileIndex < targetTiles.Count; targetTileIndex++)
         {
-            if(MovableTiles.ContainsKey(TargetTiles[targetTileIndex].TileID))
+            if(movableTiles.ContainsKey(targetTiles[targetTileIndex].TileID))
             {
                 boxesInPlace++;
             }
         }
 
-        return boxesInPlace == TargetTiles.Count;
+        return boxesInPlace == targetTiles.Count;
     }
 
     public void CompleteLevel()
@@ -244,7 +245,7 @@ public class MapController : MonoBehaviour
         OnLevelCompleted(LevelController.Instance.SelectedLevel);
     }
 
-    public bool TryMove(EnumMovementDirection movementDirection, out PlayerTerrainTile playerTile, out Vector3 playerDestination, out MovableTile boxTile, out Vector3 boxDestination)
+    public bool TryMove(EnumMovementDirection movementDirection, out PlayerTile playerTile, out Vector3 playerDestination, out MovableTile boxTile, out Vector3 boxDestination)
     {
         playerTile = null;
         playerDestination = new Vector3();
@@ -252,49 +253,49 @@ public class MapController : MonoBehaviour
         boxDestination = new Vector3();
         bool canMove = false;
 
-        int CalculatedMovementDirection = CalculateMapOffsetForMovement(movementDirection);
+        int calculatedMovementDirection = CalculateMapOffsetForMovement(movementDirection);
 
         List<MapTile> playerNeighbors = GetPlayerNeighbors();
         foreach (MapTile neighbor in playerNeighbors)
         {
-            if (neighbor.TileID == PlayerReference.CurrentTileID + CalculatedMovementDirection &&
+            if (neighbor.TileID == playerReference.CurrentTileID + calculatedMovementDirection &&
                 neighbor.IsTraversable)
             {
-                playerTile = PlayerReference;
+                playerTile = playerReference;
                 playerDestination = new Vector3(neighbor.PositionX, neighbor.PositionY, -1);
 
-                PlayerReference.CurrentTileID = neighbor.TileID;
+                playerReference.CurrentTileID = neighbor.TileID;
 
                 canMove = true;
             }
-            else if (neighbor.TileID == PlayerReference.CurrentTileID + CalculatedMovementDirection &&
+            else if (neighbor.TileID == playerReference.CurrentTileID + calculatedMovementDirection &&
                 neighbor.IsPushable)
             {
                 //Check if neighboring box can be moved in chosen direction
                 List<MapTile> boxNeighbors = GetNeighbors(neighbor);
                 foreach (MapTile boxNeighbor in boxNeighbors)
                 {
-                    if (boxNeighbor.TileID == neighbor.TileID + CalculatedMovementDirection &&
+                    if (boxNeighbor.TileID == neighbor.TileID + calculatedMovementDirection &&
                         boxNeighbor.IsTraversable)
                     {
                         int boxCurrentID = neighbor.TileID;
                         int boxesNeighborCurrentID = boxNeighbor.TileID;
 
-                        PlayerReference.CurrentTileID = boxCurrentID;
+                        playerReference.CurrentTileID = boxCurrentID;
 
-                        playerTile = PlayerReference;
+                        playerTile = playerReference;
                         playerDestination = new Vector3(neighbor.PositionX, neighbor.PositionY, -1);
 
-                        boxTile = MovableTiles[neighbor.TileID];
+                        boxTile = movableTiles[neighbor.TileID];
                         boxTile.CurrentTileID = boxesNeighborCurrentID;
                         boxDestination = new Vector3(boxNeighbor.PositionX, boxNeighbor.PositionY, -1);
-                        MovableTiles.Remove(neighbor.TileID);
-                        MovableTiles.Add(boxTile.CurrentTileID, boxTile);
+                        movableTiles.Remove(neighbor.TileID);
+                        movableTiles.Add(boxTile.CurrentTileID, boxTile);
 
-                        if (ProcessedTiles[boxesNeighborCurrentID].TileType == EnumTileType.Target)
+                        if (processedTiles[boxesNeighborCurrentID].TileType == EnumTileType.Target)
                         {
                             //TEST
-                            var particles = ProcessedTiles[boxesNeighborCurrentID].GetComponent<ParticleSystem>();
+                            var particles = processedTiles[boxesNeighborCurrentID].GetComponent<ParticleSystem>();
                             if (particles != null)
                             {
                                 if (!particles.isPlaying)
@@ -303,13 +304,13 @@ public class MapController : MonoBehaviour
                                 }
                             }
 
-                            ProcessedTiles[boxCurrentID].TurnInto(PlayerReference.TileType);
-                            ProcessedTiles[boxesNeighborCurrentID].TurnIntoPushable();
+                            processedTiles[boxCurrentID].TurnInto(playerReference.TileType);
+                            processedTiles[boxesNeighborCurrentID].TurnIntoPushable();
                         }
                         else
                         {
-                            ProcessedTiles[boxCurrentID].TurnInto(PlayerReference.TileType);
-                            ProcessedTiles[boxesNeighborCurrentID].TurnInto(EnumTileType.Box);
+                            processedTiles[boxCurrentID].TurnInto(playerReference.TileType);
+                            processedTiles[boxesNeighborCurrentID].TurnInto(EnumTileType.Box);
                         }
 
                         canMove = true;

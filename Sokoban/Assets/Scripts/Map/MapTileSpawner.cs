@@ -13,7 +13,7 @@ public class MapTileSpawner : MonoBehaviour
     public int targetTileZ = 0;
 
     public MovableTile boxTile;
-    public PlayerTerrainTile playerTile;
+    public PlayerTile playerTile;
     public TerrainTile wallTile;
     public TerrainTile grassTile;
     public TerrainTile targetTile;
@@ -43,15 +43,15 @@ public class MapTileSpawner : MonoBehaviour
         get => playerStartingTileID;
     }
 
-    EnumTileType TileType;
+    EnumTileType tileType;
 
     public MapTile CreateTileFromData(MapTileData tileData, int positionX, int positionY, Transform mapParent)
     {
-        TileType = tileData.TileType;
+        tileType = tileData.TileType;
 
         ITileSpawner spawner = ScriptableObject.CreateInstance<TileSpawner>();
 
-        switch (TileType)
+        switch (tileType)
         {
             case EnumTileType.Wall:
                 {

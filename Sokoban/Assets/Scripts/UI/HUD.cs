@@ -7,8 +7,8 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-    public Text TextTimer;
-    public Button ButtonNext;
+    public Text textTimer;
+    public Button buttonNext;
 
     private int currentLevelID;
     private int secondsInLevel;
@@ -16,7 +16,7 @@ public class HUD : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        TextTimer.text = "Elapsed time: " + new TimeSpan(0,0,0).ToString(@"mm\:ss");
+        textTimer.text = "Elapsed time: " + new TimeSpan(0,0,0).ToString(@"mm\:ss");
         MapController.OnNotifyUIAboutTime += UpdateTimer;
         MapController.OnLevelCompleted += LevelCompleted;
         ToggleButtonNext(false);
@@ -39,7 +39,7 @@ public class HUD : MonoBehaviour
     {
         secondsInLevel = seconds;
         TimeSpan timeInLevel = new TimeSpan(0, 0, (int)secondsInLevel);
-        TextTimer.text = "Elapsed time: " + timeInLevel.ToString(@"mm\:ss");
+        textTimer.text = "Elapsed time: " + timeInLevel.ToString(@"mm\:ss");
     }
 
     private void LevelCompleted(int nextLevelID)
@@ -58,15 +58,15 @@ public class HUD : MonoBehaviour
     {
         if(showButton)
         {
-            ButtonNext.GetComponentInChildren<Text>().enabled = true;
-            ButtonNext.image.enabled = true;
-            ButtonNext.enabled = true;
+            buttonNext.GetComponentInChildren<Text>().enabled = true;
+            buttonNext.image.enabled = true;
+            buttonNext.enabled = true;
         }
         else
         {
-            ButtonNext.GetComponentInChildren<Text>().enabled = false;
-            ButtonNext.image.enabled = false;
-            ButtonNext.enabled = false;
+            buttonNext.GetComponentInChildren<Text>().enabled = false;
+            buttonNext.image.enabled = false;
+            buttonNext.enabled = false;
         }
     }
 
@@ -78,13 +78,13 @@ public class HUD : MonoBehaviour
     public void ResetCurrentLevel()
     {
         LevelController.Instance.SelectedLevel = currentLevelID;
-        LevelController.Instance.UpdateLevelStatisticsOnResetLevel(currentLevelID);
+        LevelController.Instance.UpdateLevelStatisticsOnResetLevelOrOnMainMenu(currentLevelID);
         SceneManager.LoadScene(1);
     }
 
     public void ToMainMenu()
     {
-        LevelController.Instance.UpdateLevelStatisticsOnResetLevel(currentLevelID);
+        LevelController.Instance.UpdateLevelStatisticsOnResetLevelOrOnMainMenu(currentLevelID);
         SceneManager.LoadScene(0);
     }
 }

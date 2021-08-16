@@ -18,7 +18,7 @@ public class AudioController : MonoBehaviour
 
         MapController.OnLevelStarted += LevelStarted;
         MapController.OnLevelCompleted += LevelCompleted;
-        PlayerTerrainTile.OnMoveMade += PlayerMoved;
+        PlayerTile.OnMoveMade += PlayerMoved;
     }
 
     // Start is called before the first frame update
@@ -36,10 +36,10 @@ public class AudioController : MonoBehaviour
     {
         MapController.OnLevelStarted -= LevelStarted;
         MapController.OnLevelCompleted -= LevelCompleted;
-        PlayerTerrainTile.OnMoveMade -= PlayerMoved;
+        PlayerTile.OnMoveMade -= PlayerMoved;
     }
 
-    private void LevelStarted(PlayerTerrainTile player)
+    private void LevelStarted(PlayerTile player)
     {
         playerMovedEffect = player.GetComponent<AudioSource>();
 

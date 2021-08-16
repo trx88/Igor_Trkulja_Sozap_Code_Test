@@ -7,25 +7,15 @@ using UnityEngine.UI;
 
 public class MainMenuController : MonoBehaviour
 {
-    //private PlayerSettings playerSettings;
-
-    //public LevelController levelController;
     public DropdownController dropdownController;
     public Dropdown dropdownLevelSelector;
-    public Text TextBestTime;
+    public Text textBestTime;
     public Slider sliderMusic;
     public Slider sliderEffects;
-
-    //private void Awake()
-    //{
-    //    playerSettings = GetComponent<PlayerSettings>();
-    //}
 
     // Start is called before the first frame update
     void Start()
     {
-        //PlayerPrefs.DeleteAll();
-        //levelDataCollection = LevelController.Instance.LoadLevelStatistics();
         TrySetSlidersFromPlayerPrefs();
 
         SetDropDownValues(LevelController.Instance.LoadedLevelDataCollection);
@@ -64,11 +54,11 @@ public class MainMenuController : MonoBehaviour
     {
         if(bestLevelTime < 0)
         {
-            TextBestTime.text = "Best time: 00:00";
+            textBestTime.text = "Best time: 00:00";
         }
         else
         {
-            TextBestTime.text = "Best time: " + 
+            textBestTime.text = "Best time: " + 
                 new TimeSpan(0, 0, bestLevelTime).ToString(@"mm\:ss");
         }
     }

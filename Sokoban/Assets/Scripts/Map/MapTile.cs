@@ -13,23 +13,13 @@ public enum EnumTileType
     None
 };
 
-public interface ITile
+public class MapTile : MonoBehaviour
 {
-    void PrepareTile(MapTileData tileData);
-}
+    public int TileID;
+    public bool IsTraversable = false;
+    public bool IsPushable = false;
+    public EnumTileType TileType;
 
-public interface ITerrainTile : ITile
-{
-
-}
-
-public interface IMoveableTile : ITile
-{
-    Task MoveToAnotherTile(Vector3 tilePosition);
-}
-
-public class MapTile : MonoBehaviour, ITile
-{
     private int currentTileID;
     public int CurrentTileID
     {
@@ -39,11 +29,6 @@ public class MapTile : MonoBehaviour, ITile
             currentTileID = value;
         }
     }
-
-    public int TileID;
-    public bool IsTraversable = false;
-    public bool IsPushable = false;
-    public EnumTileType TileType;
 
     protected int positionX;
     public int PositionX

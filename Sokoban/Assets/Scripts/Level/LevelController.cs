@@ -5,9 +5,6 @@ using UnityEngine;
 
 public class LevelController : MonoBehaviour
 {
-    //[SerializeField]
-    //private LevelDataCollection levelDataCollection;
-
     private int selectedLevel;
     public int SelectedLevel
     {
@@ -33,21 +30,8 @@ public class LevelController : MonoBehaviour
 
     private void Awake()
     {
-        //if (instance != null && instance != this)
-        //{
-        //    Destroy(this.gameObject);
-        //}
-        //else
-        //{
-        //    instance = this;
-        //}
         DontDestroyOnLoad(gameObject);
         instance = this;
-
-        //if (!levelStatistics.LevelCollectionJSONExists())
-        //{
-        //    levelStatistics.CreateInitialLevelCollection(levelDataCollection);
-        //}
 
         if (levelStatistics.LevelCollectionJSONExists())
         {
@@ -81,7 +65,7 @@ public class LevelController : MonoBehaviour
         levelStatistics.UpdateLevelCollection(levelID, isCompleted, lastTime);
     }
 
-    public void UpdateLevelStatisticsOnResetLevel(int levelID)
+    public void UpdateLevelStatisticsOnResetLevelOrOnMainMenu(int levelID)
     {
         levelStatistics.UpdateTimesPlayedOnly(levelID);
     }
@@ -94,16 +78,5 @@ public class LevelController : MonoBehaviour
     public int GetBestLevelTime(int levelID)
     {
         return loadedLevelDataCollection.LevelsData[levelID].BestCompletedTimeInSeconds;
-    }
-}
-
-
-public static class GameFilePaths
-{
-    public static string LevelStatisticsFileName => Application.persistentDataPath + "/LevelStatistics.json";
-
-    public static string MapFileName(int mapID)
-    {
-        return Application.persistentDataPath + string.Format("/MapData{0}.json", mapID);
     }
 }

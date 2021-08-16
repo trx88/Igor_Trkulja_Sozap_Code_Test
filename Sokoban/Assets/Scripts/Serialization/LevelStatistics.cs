@@ -7,11 +7,6 @@ public class LevelStatistics
 {
     private LevelDataCollection levelStatisticsData;
 
-    //public LevelDataCollection LevelStatisticsData
-    //{
-    //    get => levelStatisticsData;
-    //}
-
     public bool LevelCollectionJSONExists()
     {
         return System.IO.File.Exists(GameFilePaths.LevelStatisticsFileName);

@@ -5,8 +5,9 @@ using UnityEngine;
 //Used for making sample map JSONs
 public class MapsWriter : MonoBehaviour
 {
-    private List<MapData> AllMaps = new List<MapData>();
+    private List<MapData> allMaps = new List<MapData>();
 
+    #region Ugly hardcoded maps
     [SerializeField]
     private MapData mapData0 = new MapData
     {
@@ -85,19 +86,19 @@ public class MapsWriter : MonoBehaviour
             new MapTileData(252, EnumTileType.Wall), new MapTileData(253, EnumTileType.Wall), new MapTileData(254, EnumTileType.Wall), new MapTileData(255, EnumTileType.Wall), new MapTileData(256, EnumTileType.None), new MapTileData(257, EnumTileType.None), new MapTileData(258, EnumTileType.None), new MapTileData(259, EnumTileType.None), new MapTileData(260, EnumTileType.None), new MapTileData(261, EnumTileType.None), new MapTileData(262, EnumTileType.None), new MapTileData(263, EnumTileType.None), new MapTileData(264, EnumTileType.None), new MapTileData(265, EnumTileType.None), new MapTileData(266, EnumTileType.None), new MapTileData(267, EnumTileType.None), new MapTileData(268, EnumTileType.Wall), new MapTileData(269, EnumTileType.Wall), new MapTileData(270, EnumTileType.Wall), new MapTileData(271, EnumTileType.Wall), new MapTileData(272, EnumTileType.None)
         }
     };
+    #endregion
 
     public bool useScriptableObjectsToCreateMap;
-    public List<ScriptableObjectTest> scriptableObjectMaps;
-
-    private LevelDataCollection levelCollection = new LevelDataCollection();
+    public List<ScriptableObjectMapData> scriptableObjectMaps;
     private List<LevelData> levelData = new List<LevelData>();
+    private LevelDataCollection levelCollection = new LevelDataCollection();
 
     public void SaveAllMapsToJSON()
     {
         bool mapsAlreadyExist = true;
         int mapID = -1;
 
-        foreach (MapData mapData in AllMaps)
+        foreach (MapData mapData in allMaps)
         {
             mapID++;
 
@@ -119,40 +120,6 @@ public class MapsWriter : MonoBehaviour
             }
         }
 
-        if(!mapsAlreadyExist)
-        {
-            levelCollection.LevelsData = levelData;
-            LevelController.Instance.CreateInitialLevelCollectionFromMaps(levelCollection);
-        }
-    }
-
-    public void SaveAllMapsToJSONFromScriptableObjects()
-    {
-        bool mapsAlreadyExist = true;
-        int mapID = -1;
-
-        foreach (ScriptableObjectTest scriptableObjectData in scriptableObjectMaps)
-        {
-            mapID++;
-
-            if (!System.IO.File.Exists(GameFilePaths.MapFileName(mapID)))
-            {
-                levelData.Add(new LevelData
-                {
-                    LevelName = string.Format("Level {0}", mapID),
-                    MapID = mapID,
-                    IsCompleted = false,
-                    NumbersPlayed = 0,
-                    BestCompletedTimeInSeconds = -1
-                });
-
-                string mapJSON = JsonUtility.ToJson(scriptableObjectData.mapData);
-                System.IO.File.WriteAllText(GameFilePaths.MapFileName(mapID), mapJSON);
-
-                mapsAlreadyExist = false;
-            }
-        }
-
         if (!mapsAlreadyExist)
         {
             levelCollection.LevelsData = levelData;
@@ -164,16 +131,19 @@ public class MapsWriter : MonoBehaviour
     {
         if(!useScriptableObjectsToCreateMap)
         {
-            AllMaps.Add(mapData0);
-            AllMaps.Add(mapData1);
-            AllMaps.Add(mapData2);
-            AllMaps.Add(mapData3);
-            SaveAllMapsToJSON();
+            allMaps.Add(mapData0);
+            allMaps.Add(mapData1);
+            allMaps.Add(mapData2);
+            allMaps.Add(mapData3);
         }
         else
         {
-            SaveAllMapsToJSONFromScriptableObjects();
+            foreach (ScriptableObjectMapData scriptableObjectData in scriptableObjectMaps)
+            {
+                allMaps.Add(scriptableObjectData.mapData);
+            }
         }
+        SaveAllMapsToJSON();
     }
 
     // Start is called before the first frame update
@@ -186,5 +156,15 @@ public class MapsWriter : MonoBehaviour
     void Update()
     {
         
+    }
+}
+
+public static class GameFilePaths
+{
+    public static string LevelStatisticsFileName => Application.persistentDataPath + "/LevelStatistics.json";
+
+    public static string MapFileName(int mapID)
+    {
+        return Application.persistentDataPath + string.Format("/MapData{0}.json", mapID);
     }
 }

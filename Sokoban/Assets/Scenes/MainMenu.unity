@@ -1463,28 +1463,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 876f98a4aea65584f9da70ae37240e5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelDataCollection:
-    LevelsData:
-    - LevelName: Level 1
-      NumbersPlayed: 0
-      IsCompleted: 0
-      BestCompletedTimeInSeconds: -1
-      MapID: 0
-    - LevelName: Level 2
-      NumbersPlayed: 0
-      IsCompleted: 0
-      BestCompletedTimeInSeconds: -1
-      MapID: 1
-    - LevelName: Level 3
-      NumbersPlayed: 0
-      IsCompleted: 0
-      BestCompletedTimeInSeconds: -1
-      MapID: 2
-    - LevelName: Level 4
-      NumbersPlayed: 0
-      IsCompleted: 0
-      BestCompletedTimeInSeconds: -1
-      MapID: 3
 --- !u!4 &793479267
 Transform:
   m_ObjectHideFlags: 0

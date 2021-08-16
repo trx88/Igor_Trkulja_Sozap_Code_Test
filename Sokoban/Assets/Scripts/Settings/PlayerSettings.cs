@@ -7,9 +7,6 @@ public class PlayerSettings : MonoBehaviour
     private const string MUSIC_LEVEL_KEY = "MusicLevel";
     private const string EFFECT_LEVEL_KEY = "EffectsLevel";
 
-    private float musicLevel;
-    private float effectsLevel;
-
     private static PlayerSettings instance;
 
     public static PlayerSettings Instance { get { return instance; } }

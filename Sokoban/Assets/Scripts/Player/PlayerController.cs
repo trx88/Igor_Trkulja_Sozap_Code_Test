@@ -6,7 +6,7 @@ using UnityEngine.UI;
 //Handles player input.
 public class PlayerController : MonoBehaviour
 {
-    Command Idle, CommandRight, CommandLeft, CommandUp, CommandDown;
+    private Command idle, commandRight, commandLeft, commandUp, commandDown;
 
     private CommandExecutor commandExecutor;
 
@@ -24,11 +24,11 @@ public class PlayerController : MonoBehaviour
         commandExecutor = GetComponent<CommandExecutor>();
         commandExecutor.MapControllerReference = mapController;
 
-        Idle = new DoNothing();
-        CommandRight = new MoveRight();
-        CommandLeft = new MoveLeft();
-        CommandUp = new MoveUp();
-        CommandDown = new MoveDown();
+        idle = new DoNothing();
+        commandRight = new MoveRight();
+        commandLeft = new MoveLeft();
+        commandUp = new MoveUp();
+        commandDown = new MoveDown();
     }
 
     // Update is called once per frame
@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
         {
             Command command = HandleInput();
 
-            if (command.GetType() != Idle.GetType())
+            if (command.GetType() != idle.GetType())
             {
                 commandExecutor.TryToExecute(command);
             }
@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
         {
             Command command = GetUICommand();
 
-            if (command.GetType() != Idle.GetType())
+            if (command.GetType() != idle.GetType())
             {
                 commandExecutor.TryToExecute(command);
                 uiCommand = null;
@@ -60,23 +60,23 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.RightArrow) || gameObject?.name == UIButtonRight.gameObject.name)
         {
-            return CommandRight;
+            return commandRight;
         }
         else if (Input.GetKeyUp(KeyCode.LeftArrow) || gameObject?.name == UIButtonLeft.gameObject.name)
         {
-            return CommandLeft;
+            return commandLeft;
         }
         else if (Input.GetKeyUp(KeyCode.UpArrow) || gameObject?.name == UIButtonUp.gameObject.name)
         {
-            return CommandUp;
+            return commandUp;
         }
         else if (Input.GetKeyUp(KeyCode.DownArrow) || gameObject?.name == UIButtonDown.gameObject.name)
         {
-            return CommandDown;
+            return commandDown;
         }
         else
         {
-            return Idle;
+            return idle;
         }
     }
 

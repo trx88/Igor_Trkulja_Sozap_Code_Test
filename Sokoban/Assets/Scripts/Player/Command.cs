@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class Command
 {
-    public bool CommandCompleted = false;
+    public bool commandCompleted = false;
 
     public abstract void Execute(MapController mapController);
 }
@@ -31,31 +31,28 @@ public class MoveRight : MoveCommand
 {
     public async override void Move(MapController mapController)
     {
-        CommandCompleted = false;
+        commandCompleted = false;
 
-        PlayerTerrainTile OutPlayerTile = null;
-        Vector3 newPlayerPosition;
-        MovableTile OutBoxTile = null;
-        Vector3 newBoxPosition;
+        PlayerTile outPlayerTile = null;
+        Vector3 outNewPlayerPosition;
+        MovableTile outBoxTile = null;
+        Vector3 outNewBoxPosition;
 
-        if(mapController.TryMove(EnumMovementDirection.Right, out OutPlayerTile, out newPlayerPosition, out OutBoxTile, out newBoxPosition))
+        if(mapController.TryMove(EnumMovementDirection.Right, out outPlayerTile, out outNewPlayerPosition, out outBoxTile, out outNewBoxPosition))
         {
-            if(OutPlayerTile && OutBoxTile)
+            if(outPlayerTile && outBoxTile)
             {
                 //Move both
-                await OutPlayerTile.MoveBoxToAnotherTile(newPlayerPosition, OutBoxTile, newBoxPosition);
-                //Debug.Log(string.Format("Player on tile: {0} Box on tile: {1}", OutPlayerTile.CurrentTileID, OutBoxTile.CurrentTileID));
+                await outPlayerTile.MoveBoxToAnotherTile(outNewPlayerPosition, outBoxTile, outNewBoxPosition);
             }
-            else if(OutPlayerTile)
+            else if(outPlayerTile)
             {
                 //Move player
-                await OutPlayerTile.MoveToAnotherTile(newPlayerPosition);
-                //Debug.Log(string.Format("Player on tile: {0}", OutPlayerTile.CurrentTileID));
+                await outPlayerTile.MoveToAnotherTile(outNewPlayerPosition);
             }
         }
 
-        //Debug.Log("Command completed");
-        CommandCompleted = true;
+        commandCompleted = true;
     }
 }
 
@@ -63,31 +60,28 @@ public class MoveLeft : MoveCommand
 {
     public async override void Move(MapController mapController)
     {
-        CommandCompleted = false;
+        commandCompleted = false;
 
-        PlayerTerrainTile OutPlayerTile = null;
-        Vector3 newPlayerPosition;
-        MovableTile OutBoxTile = null;
-        Vector3 newBoxPosition;
+        PlayerTile outPlayerTile = null;
+        Vector3 outNewPlayerPosition;
+        MovableTile outBoxTile = null;
+        Vector3 outNewBoxPosition;
 
-        if (mapController.TryMove(EnumMovementDirection.Left, out OutPlayerTile, out newPlayerPosition, out OutBoxTile, out newBoxPosition))
+        if (mapController.TryMove(EnumMovementDirection.Left, out outPlayerTile, out outNewPlayerPosition, out outBoxTile, out outNewBoxPosition))
         {
-            if (OutPlayerTile && OutBoxTile)
+            if (outPlayerTile && outBoxTile)
             {
                 //Move both
-                await OutPlayerTile.MoveBoxToAnotherTile(newPlayerPosition, OutBoxTile, newBoxPosition);
-                //Debug.Log(string.Format("Player on tile: {0} Box on tile: {1}", OutPlayerTile.CurrentTileID, OutBoxTile.CurrentTileID));
+                await outPlayerTile.MoveBoxToAnotherTile(outNewPlayerPosition, outBoxTile, outNewBoxPosition);
             }
-            else if (OutPlayerTile)
+            else if (outPlayerTile)
             {
                 //Move player
-                await OutPlayerTile.MoveToAnotherTile(newPlayerPosition);
-                //Debug.Log(string.Format("Player on tile: {0}", OutPlayerTile.CurrentTileID));
+                await outPlayerTile.MoveToAnotherTile(outNewPlayerPosition);
             }
         }
 
-        //Debug.Log("Command completed");
-        CommandCompleted = true;
+        commandCompleted = true;
     }
 }
 
@@ -95,31 +89,28 @@ public class MoveUp : MoveCommand
 {
     public async override void Move(MapController mapController)
     {
-        CommandCompleted = false;
+        commandCompleted = false;
 
-        PlayerTerrainTile OutPlayerTile = null;
-        Vector3 newPlayerPosition;
-        MovableTile OutBoxTile = null;
-        Vector3 newBoxPosition;
+        PlayerTile outPlayerTile = null;
+        Vector3 outNewPlayerPosition;
+        MovableTile outBoxTile = null;
+        Vector3 outNewBoxPosition;
 
-        if (mapController.TryMove(EnumMovementDirection.Up, out OutPlayerTile, out newPlayerPosition, out OutBoxTile, out newBoxPosition))
+        if (mapController.TryMove(EnumMovementDirection.Up, out outPlayerTile, out outNewPlayerPosition, out outBoxTile, out outNewBoxPosition))
         {
-            if (OutPlayerTile && OutBoxTile)
+            if (outPlayerTile && outBoxTile)
             {
                 //Move both
-                await OutPlayerTile.MoveBoxToAnotherTile(newPlayerPosition, OutBoxTile, newBoxPosition);
-                //Debug.Log(string.Format("Player on tile: {0} Box on tile: {1}", OutPlayerTile.CurrentTileID, OutBoxTile.CurrentTileID));
+                await outPlayerTile.MoveBoxToAnotherTile(outNewPlayerPosition, outBoxTile, outNewBoxPosition);
             }
-            else if (OutPlayerTile)
+            else if (outPlayerTile)
             {
                 //Move player
-                await OutPlayerTile.MoveToAnotherTile(newPlayerPosition);
-                //Debug.Log(string.Format("Player on tile: {0}", OutPlayerTile.CurrentTileID));
+                await outPlayerTile.MoveToAnotherTile(outNewPlayerPosition);
             }
         }
 
-        //Debug.Log("Command completed");
-        CommandCompleted = true;
+        commandCompleted = true;
     }
 }
 
@@ -127,30 +118,27 @@ public class MoveDown : MoveCommand
 {
     public async override void Move(MapController mapController)
     {
-        CommandCompleted = false;
+        commandCompleted = false;
 
-        PlayerTerrainTile OutPlayerTile = null;
-        Vector3 newPlayerPosition;
-        MovableTile OutBoxTile = null;
-        Vector3 newBoxPosition;
+        PlayerTile outPlayerTile = null;
+        Vector3 outNewPlayerPosition;
+        MovableTile outBoxTile = null;
+        Vector3 outNewBoxPosition;
 
-        if (mapController.TryMove(EnumMovementDirection.Down, out OutPlayerTile, out newPlayerPosition, out OutBoxTile, out newBoxPosition))
+        if (mapController.TryMove(EnumMovementDirection.Down, out outPlayerTile, out outNewPlayerPosition, out outBoxTile, out outNewBoxPosition))
         {
-            if (OutPlayerTile && OutBoxTile)
+            if (outPlayerTile && outBoxTile)
             {
                 //Move both
-                await OutPlayerTile.MoveBoxToAnotherTile(newPlayerPosition, OutBoxTile, newBoxPosition);
-                //Debug.Log(string.Format("Player on tile: {0} Box on tile: {1}", OutPlayerTile.CurrentTileID, OutBoxTile.CurrentTileID));
+                await outPlayerTile.MoveBoxToAnotherTile(outNewPlayerPosition, outBoxTile, outNewBoxPosition);
             }
-            else if (OutPlayerTile)
+            else if (outPlayerTile)
             {
                 //Move player
-                await OutPlayerTile.MoveToAnotherTile(newPlayerPosition);
-                //Debug.Log(string.Format("Player on tile: {0}", OutPlayerTile.CurrentTileID));
+                await outPlayerTile.MoveToAnotherTile(outNewPlayerPosition);
             }
         }
 
-        //Debug.Log("Command completed");
-        CommandCompleted = true;
+        commandCompleted = true;
     }
 }

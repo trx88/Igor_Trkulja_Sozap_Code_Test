@@ -11,11 +11,11 @@ public class DropdownController : MonoBehaviour, IPointerClickHandler
     [Tooltip("Indexes that should be ignored. Indexes are 0 based.")]
     public List<int> indexesToDisable = new List<int>();
 
-    private Dropdown _dropdown;
+    private Dropdown dropdown;
 
     private void Awake()
     {
-        _dropdown = GetComponent<Dropdown>();
+        dropdown = GetComponent<Dropdown>();
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -40,7 +40,7 @@ public class DropdownController : MonoBehaviour, IPointerClickHandler
     // Anytime change a value by index
     public void EnableOption(int index, bool enable)
     {
-        if (index < 1 || index > _dropdown.options.Count)
+        if (index < 1 || index > dropdown.options.Count)
         {
             Debug.LogWarning("Index out of range -> ignored!", this);
             return;
@@ -70,7 +70,7 @@ public class DropdownController : MonoBehaviour, IPointerClickHandler
     // Anytime change a value by string label
     public void EnableOption(string label, bool enable)
     {
-        var index = _dropdown.options.FindIndex(o => string.Equals(o.text, label));
+        var index = dropdown.options.FindIndex(o => string.Equals(o.text, label));
 
         // We need a 1-based index
         EnableOption(index + 1, enable);

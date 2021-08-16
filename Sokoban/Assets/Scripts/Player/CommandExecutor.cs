@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CommandExecutor : MonoBehaviour
 {
-    private Command CommandToExecute = null;
+    private Command commandToExecute = null;
 
     private MapController mapController;
 
@@ -20,7 +20,7 @@ public class CommandExecutor : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        CommandToExecute = null;
+        commandToExecute = null;
     }
 
     // Update is called once per frame
@@ -31,22 +31,20 @@ public class CommandExecutor : MonoBehaviour
 
     public void TryToExecute(Command command)
     {
-        if (CommandToExecute != null && CommandToExecute.CommandCompleted)
+        if (commandToExecute != null && commandToExecute.commandCompleted)
         {
-            CommandToExecute = null;
+            commandToExecute = null;
         }
 
-        if (CommandToExecute == null)
+        if (commandToExecute == null)
         {
-            CommandToExecute = command;
-            CommandToExecute.Execute(mapController);
+            commandToExecute = command;
+            commandToExecute.Execute(mapController);
 
             if(mapController.AreBoxesInPlace())
             {
                 Debug.Log("LEVEL COMPLETED!");
                 mapController.CompleteLevel();
-                //stop the timer and write JSON
-                //reload scene with new level
             }
         }
     }

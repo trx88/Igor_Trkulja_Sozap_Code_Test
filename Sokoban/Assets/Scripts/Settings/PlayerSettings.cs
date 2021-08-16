@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Handles player settings (audio levels).
+/// </summary>
 public class PlayerSettings : MonoBehaviour
 {
     private const string MUSIC_LEVEL_KEY = "MusicLevel";
@@ -32,6 +35,9 @@ public class PlayerSettings : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// Sets default value if keys don't exist.
+    /// </summary>
     private void SetInitialSettingValues()
     {
         if (!PlayerPrefs.HasKey(MUSIC_LEVEL_KEY))
@@ -46,22 +52,38 @@ public class PlayerSettings : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Gets music audio level.
+    /// </summary>
+    /// <returns></returns>
     public float GetMusicLevel()
     {
         return PlayerPrefs.GetFloat(MUSIC_LEVEL_KEY);
     }
 
+    /// <summary>
+    /// Sets music audio level.
+    /// </summary>
+    /// <param name="musicLevelValue"></param>
     public void SetMusicLevel(float musicLevelValue)
     {
         PlayerPrefs.SetFloat(MUSIC_LEVEL_KEY, musicLevelValue);
         PlayerPrefs.Save();
     }
 
+    /// <summary>
+    /// Gets effects audio level.
+    /// </summary>
+    /// <returns></returns>
     public float GetEffectsLevel()
     {
         return PlayerPrefs.GetFloat(EFFECT_LEVEL_KEY);
     }
 
+    /// <summary>
+    /// Sets effects audio level.
+    /// </summary>
+    /// <param name="effectsLevelValue"></param>
     public void SetEffectsLevel(float effectsLevelValue)
     {
         PlayerPrefs.SetFloat(EFFECT_LEVEL_KEY, effectsLevelValue);

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Used to set the direction in the matrix for finding tile neighbors.
 public struct NeighborsDirection
 {
     public int X { get; }
@@ -14,6 +15,7 @@ public struct NeighborsDirection
     }
 }
 
+//Used to determine player movement direction in TryMove method
 public enum EnumMovementDirection
 {
     Right,
@@ -22,17 +24,25 @@ public enum EnumMovementDirection
     Down
 }
 
+/// <summary>
+/// A big one...
+/// Handles all map related stuff. Player movement, map creation, is level completed, etc.
+/// </summary>
 public class MapController : MonoBehaviour
 {
+    //For HUD to show second spent in the level. Avoids using Update method.
     public delegate void NotifyUIAboutTime(int seconds);
     public static event NotifyUIAboutTime OnNotifyUIAboutTime;
 
+    //For HUD to potentially show next level button.
     public delegate void LevelCompleted(int newLevelID);
     public static event LevelCompleted OnLevelCompleted;
 
+    //For Audio controller to start playing level music.
     public delegate void LevelStarted(PlayerTile player);
     public static event LevelStarted OnLevelStarted;
 
+    //Used for positioning map parent game object.
     private const float SCREEN_OFFSET_PERCENT_X = 0.05f;
     private const float SCREEN_OFFSET_PERCENT_Y = 0.9f;
     private const int TILE_SIZE = 1;
@@ -43,11 +53,16 @@ public class MapController : MonoBehaviour
     private int mapWidth;
     private int mapHeight;
 
+    //Tiles placed on the map
     private Dictionary<int, MapTile> processedTiles = new Dictionary<int, MapTile>();
+    //Movable tiles (boxes, in other words). Player tile has a separate reference.
     private Dictionary<int, MovableTile> movableTiles = new Dictionary<int, MovableTile>();
+    //Each tile neighbors.
     private Dictionary<int, List<MapTile>> tileNeighbors = new Dictionary<int, List<MapTile>>();
+    //Target tiles (where boxes should be placed)
     private List<MapTile> targetTiles = new List<MapTile>();
 
+    //Create directions in the matrix for finding neighbors. -1 is used, since map is created from the top-left corner.
     private List<NeighborsDirection> directions = new List<NeighborsDirection>()
     {
         new NeighborsDirection(1, 0), //right
@@ -56,8 +71,10 @@ public class MapController : MonoBehaviour
         new NeighborsDirection(0, 1) //down
     };
 
+    //Map parent game object
     public Transform mapParent;
 
+    //Player tile
     private PlayerTile playerReference;
 
     public PlayerTile GetPlayerTile()
@@ -65,6 +82,11 @@ public class MapController : MonoBehaviour
         return playerReference;
     }
 
+    /// <summary>
+    /// Calculates offset for movement in the matrix.
+    /// </summary>
+    /// <param name="movementDirection"></param>
+    /// <returns></returns>
     int CalculateMapOffsetForMovement(EnumMovementDirection movementDirection)
     {
         switch (movementDirection)
@@ -81,6 +103,12 @@ public class MapController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Map if flat. We wouldn't want to fall off. :D
+    /// </summary>
+    /// <param name="tile"></param>
+    /// <param name="direction"></param>
+    /// <returns></returns>
     bool IsNeighborInsideTheMap(MapTile tile, NeighborsDirection direction)
     {
         return
@@ -90,6 +118,11 @@ public class MapController : MonoBehaviour
             tile.RowIndex + direction.Y <= mapHeight - 1;
     }
 
+    /// <summary>
+    /// Sets the list of tile neighbors.
+    /// </summary>
+    /// <param name="tile"></param>
+    /// <returns></returns>
     List<MapTile> FindTileNeighbors(MapTile tile)
     {
         List<MapTile> neighbors = new List<MapTile>();
@@ -111,6 +144,9 @@ public class MapController : MonoBehaviour
         return neighbors;
     }
 
+    /// <summary>
+    /// Sets the neighbors for each tile when map is created.
+    /// </summary>
     void SetNeighborsForEachTile()
     {
         foreach (MapTile tile in processedTiles.Values)
@@ -120,6 +156,11 @@ public class MapController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Gets the tile neighbor
+    /// </summary>
+    /// <param name="tile"></param>
+    /// <returns></returns>
     List<MapTile> GetNeighbors(MapTile tile)
     {
         List<MapTile> neighbors = new List<MapTile>();
@@ -132,6 +173,10 @@ public class MapController : MonoBehaviour
         return neighbors;
     }
 
+    /// <summary>
+    /// Gets the player tile neighbor. Kinda redundant...
+    /// </summary>
+    /// <returns></returns>
     List<MapTile> GetPlayerNeighbors()
     {
         List<MapTile> neighbors = new List<MapTile>();
@@ -144,6 +189,11 @@ public class MapController : MonoBehaviour
         return neighbors;
     }
 
+    /// <summary>
+    /// Adds a newly created tile correct collections.
+    /// </summary>
+    /// <param name="tileID"></param>
+    /// <param name="tile"></param>
     void ProcessMapTile(int tileID, MapTile tile)
     {
         processedTiles.Add(tileID, tile);
@@ -157,6 +207,9 @@ public class MapController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Loads the map from the JSON file and places the tiles on the map. Uses MapTileSpawner to spawn tiles and processes the tiles.
+    /// </summary>
     void PlaceTilesOnMap()
     {
         MapData mapData = GetComponent<MapLoader>().LoadMapFromJSON(LevelController.Instance.SelectedLevel);
@@ -181,7 +234,7 @@ public class MapController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log(string.Format("Selected level: {0}", LevelController.Instance.SelectedLevel));
+        //Debug.Log(string.Format("Selected level: {0}", LevelController.Instance.SelectedLevel));
 
         PlaceTilesOnMap();
 
@@ -191,6 +244,7 @@ public class MapController : MonoBehaviour
 
         SetMapParentInTheWorld();
 
+        //Avoids using Update method for counting seconds in level.
         StartCoroutine(CountLevelTime());
 
         OnLevelStarted(playerReference);
@@ -202,6 +256,10 @@ public class MapController : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Avoids using Update method for counting seconds in level.
+    /// </summary>
+    /// <returns></returns>
     IEnumerator CountLevelTime()
     {
         while(!AreBoxesInPlace())
@@ -216,6 +274,9 @@ public class MapController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Repositions map parent in the world.
+    /// </summary>
     public void SetMapParentInTheWorld()
     {
         Vector3 topLeftPosition = new Vector3(Screen.width * SCREEN_OFFSET_PERCENT_X, Screen.height * SCREEN_OFFSET_PERCENT_Y, 0);
@@ -223,6 +284,10 @@ public class MapController : MonoBehaviour
         mapParent.transform.position = new Vector3(mapParent.transform.position.x, mapParent.transform.position.y, 0);
     }
 
+    /// <summary>
+    /// Win condition.
+    /// </summary>
+    /// <returns></returns>
     public bool AreBoxesInPlace()
     {
         int boxesInPlace = 0;
@@ -238,6 +303,9 @@ public class MapController : MonoBehaviour
         return boxesInPlace == targetTiles.Count;
     }
 
+    /// <summary>
+    /// Complete current level. Update JSON level statistics. Notify other classes to try to load a next level.
+    /// </summary>
     public void CompleteLevel()
     {
         LevelController.Instance.UpdateLevelStatistics(LevelController.Instance.SelectedLevel, true, secondsPlaying);
@@ -245,6 +313,15 @@ public class MapController : MonoBehaviour
         OnLevelCompleted(LevelController.Instance.SelectedLevel);
     }
 
+    /// <summary>
+    /// Checks if movement in some direction is possible.
+    /// </summary>
+    /// <param name="movementDirection"></param>
+    /// <param name="playerTile"></param>
+    /// <param name="playerDestination"></param>
+    /// <param name="boxTile"></param>
+    /// <param name="boxDestination"></param>
+    /// <returns></returns>
     public bool TryMove(EnumMovementDirection movementDirection, out PlayerTile playerTile, out Vector3 playerDestination, out MovableTile boxTile, out Vector3 boxDestination)
     {
         playerTile = null;
@@ -253,34 +330,40 @@ public class MapController : MonoBehaviour
         boxDestination = new Vector3();
         bool canMove = false;
 
+        //Gets the matrix offset for chosen movement direction
         int calculatedMovementDirection = CalculateMapOffsetForMovement(movementDirection);
 
         List<MapTile> playerNeighbors = GetPlayerNeighbors();
+        //Check player neighbors
         foreach (MapTile neighbor in playerNeighbors)
         {
+            //Can player move without the box to empty space (Grass tile).
             if (neighbor.TileID == playerReference.CurrentTileID + calculatedMovementDirection &&
                 neighbor.IsTraversable)
             {
                 playerTile = playerReference;
                 playerDestination = new Vector3(neighbor.PositionX, neighbor.PositionY, -1);
 
+                //Change player's current tile ID to grass tile's ID (player will be there when movement is complete).
                 playerReference.CurrentTileID = neighbor.TileID;
 
                 canMove = true;
             }
+            //Can player move with the box to empty space (Grass tile) or target space (Target tile).
             else if (neighbor.TileID == playerReference.CurrentTileID + calculatedMovementDirection &&
                 neighbor.IsPushable)
             {
-                //Check if neighboring box can be moved in chosen direction
                 List<MapTile> boxNeighbors = GetNeighbors(neighbor);
                 foreach (MapTile boxNeighbor in boxNeighbors)
                 {
+                    //Check if neighboring box can be moved in chosen direction (e.g. there's a grass tile behind the box tile)
                     if (boxNeighbor.TileID == neighbor.TileID + calculatedMovementDirection &&
                         boxNeighbor.IsTraversable)
                     {
                         int boxCurrentID = neighbor.TileID;
                         int boxesNeighborCurrentID = boxNeighbor.TileID;
 
+                        //Change player's current tile ID to box tile's ID (player will be there when movement is complete).
                         playerReference.CurrentTileID = boxCurrentID;
 
                         playerTile = playerReference;
@@ -289,20 +372,16 @@ public class MapController : MonoBehaviour
                         boxTile = movableTiles[neighbor.TileID];
                         boxTile.CurrentTileID = boxesNeighborCurrentID;
                         boxDestination = new Vector3(boxNeighbor.PositionX, boxNeighbor.PositionY, -1);
+
+                        //Refresh the movable tile list (ID's of tiles have been changed).
                         movableTiles.Remove(neighbor.TileID);
                         movableTiles.Add(boxTile.CurrentTileID, boxTile);
 
+                        //Changes enum types and movement constraint bools for tiles on the mapp
                         if (processedTiles[boxesNeighborCurrentID].TileType == EnumTileType.Target)
                         {
-                            //TEST
-                            var particles = processedTiles[boxesNeighborCurrentID].GetComponent<ParticleSystem>();
-                            if (particles != null)
-                            {
-                                if (!particles.isPlaying)
-                                {
-                                    particles.Play();
-                                }
-                            }
+                            //EXREMLY UGLY :( (Out of time for some kind of normal solution).
+                            ((TerrainTile)processedTiles[boxesNeighborCurrentID]).PlayParticles();
 
                             processedTiles[boxCurrentID].TurnInto(playerReference.TileType);
                             processedTiles[boxesNeighborCurrentID].TurnIntoPushable();

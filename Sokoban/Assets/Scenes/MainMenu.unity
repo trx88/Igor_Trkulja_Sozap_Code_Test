@@ -400,7 +400,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dropdownController: {fileID: 132299296}
   dropdownLevelSelector: {fileID: 132299293}
-  TextBestTime: {fileID: 76635478}
+  textBestTime: {fileID: 76635478}
   sliderMusic: {fileID: 1255165891}
   sliderEffects: {fileID: 1994030369}
 --- !u!4 &177704221

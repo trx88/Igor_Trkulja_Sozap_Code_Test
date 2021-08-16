@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+/// <summary>
+/// Component for disabling options in the Dropdown control.
+/// </summary>
 [RequireComponent(typeof(Dropdown))]
 [DisallowMultipleComponent]
 public class DropdownController : MonoBehaviour, IPointerClickHandler
@@ -37,7 +40,11 @@ public class DropdownController : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    // Anytime change a value by index
+    /// <summary>
+    /// Anytime change a value by index
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="enable"></param>
     public void EnableOption(int index, bool enable)
     {
         if (index < 1 || index > dropdown.options.Count)
@@ -67,7 +74,11 @@ public class DropdownController : MonoBehaviour, IPointerClickHandler
         toogles[index].interactable = enable;
     }
 
-    // Anytime change a value by string label
+    /// <summary>
+    /// Anytime change a value by string label
+    /// </summary>
+    /// <param name="label"></param>
+    /// <param name="enable"></param>
     public void EnableOption(string label, bool enable)
     {
         var index = dropdown.options.FindIndex(o => string.Equals(o.text, label));

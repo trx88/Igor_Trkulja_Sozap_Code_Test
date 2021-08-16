@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//Used for making sample map JSONs
+/// <summary>
+/// Used for making sample map JSONs
+/// </summary>
 public class MapsWriter : MonoBehaviour
 {
+    //Container for MapData (can come from hard coded maps or list of scriptable objects.
     private List<MapData> allMaps = new List<MapData>();
 
     #region Ugly hardcoded maps
@@ -93,6 +96,9 @@ public class MapsWriter : MonoBehaviour
     private List<LevelData> levelData = new List<LevelData>();
     private LevelDataCollection levelCollection = new LevelDataCollection();
 
+    /// <summary>
+    /// Save maps to JSON. 
+    /// </summary>
     public void SaveAllMapsToJSON()
     {
         bool mapsAlreadyExist = true;
@@ -102,6 +108,7 @@ public class MapsWriter : MonoBehaviour
         {
             mapID++;
 
+            //Create maps if they don't exist.
             if (!System.IO.File.Exists(GameFilePaths.MapFileName(mapID)))
             {
                 levelData.Add(new LevelData
@@ -123,12 +130,13 @@ public class MapsWriter : MonoBehaviour
         if (!mapsAlreadyExist)
         {
             levelCollection.LevelsData = levelData;
-            LevelController.Instance.CreateInitialLevelCollectionFromMaps(levelCollection);
+            LevelController.Instance.CreateInitialLevelStatisticsFromMaps(levelCollection);
         }
     }
 
     private void Awake()
     {
+        //Use hard coded maps
         if(!useScriptableObjectsToCreateMap)
         {
             allMaps.Add(mapData0);
@@ -136,7 +144,7 @@ public class MapsWriter : MonoBehaviour
             allMaps.Add(mapData2);
             allMaps.Add(mapData3);
         }
-        else
+        else //Use maps from the list of scriptable objects.
         {
             foreach (ScriptableObjectMapData scriptableObjectData in scriptableObjectMaps)
             {
@@ -159,6 +167,9 @@ public class MapsWriter : MonoBehaviour
     }
 }
 
+/// <summary>
+/// Gets the folder and file names for JSONs. Made it to make the code more clean.
+/// </summary>
 public static class GameFilePaths
 {
     public static string LevelStatisticsFileName => Application.persistentDataPath + "/LevelStatistics.json";

@@ -1970,8 +1970,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bfb8c853acfe1244a27284617e8a956, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TextTimer: {fileID: 328856193}
-  ButtonNext: {fileID: 547837928}
+  textTimer: {fileID: 328856193}
+  buttonNext: {fileID: 547837928}
 --- !u!1 &1848407067
 GameObject:
   m_ObjectHideFlags: 0

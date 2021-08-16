@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Controls the playing of audio files. Subscribes to events sent by MapController and PlayerTile.
+/// </summary>
 public class AudioController : MonoBehaviour
 {
     public AudioSource levelPlayMusic;
@@ -12,6 +15,7 @@ public class AudioController : MonoBehaviour
 
     private void Awake()
     {
+        //Get audio volumes from PlayerPrefs
         levelPlayMusic.volume = PlayerSettings.Instance.GetMusicLevel();
         levelCompletedMusic.volume = PlayerSettings.Instance.GetMusicLevel();
         playerMovedEffect.volume = PlayerSettings.Instance.GetEffectsLevel();
@@ -41,6 +45,7 @@ public class AudioController : MonoBehaviour
 
     private void LevelStarted(PlayerTile player)
     {
+        //Get audio source from player tile.
         playerMovedEffect = player.GetComponent<AudioSource>();
 
         levelCompletedMusic.Stop();

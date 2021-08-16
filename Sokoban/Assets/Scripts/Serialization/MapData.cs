@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//Used for creating maps. Will be empty when all maps are created.
+/// <summary>
+/// Used for holding map data used in creation.
+/// </summary>
 [System.Serializable]
 public class MapData
 {

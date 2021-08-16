@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-//Handles player input.
+/// <summary>
+/// Handles player input. Uses command pattern.
+/// </summary>
 public class PlayerController : MonoBehaviour
 {
     private Command idle, commandRight, commandLeft, commandUp, commandDown;
@@ -55,7 +57,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// Handles user input. Can handle keyboard and UI input.
+    /// </summary>
+    /// <param name="gameObject">Optional parameter to enable handling input from UI.</param>
+    /// <returns></returns>
     Command HandleInput(GameObject gameObject = null)
     {
         if (Input.GetKeyUp(KeyCode.RightArrow) || gameObject?.name == UIButtonRight.gameObject.name)
@@ -80,6 +86,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// UI movement controls binding. Calls regular HandleInput, but passes the last active button.
+    /// </summary>
     public void HandleUIInput()
     {
         uiCommand = HandleInput(UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject);

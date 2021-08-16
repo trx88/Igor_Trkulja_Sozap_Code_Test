@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Executes command sent by PlayerController.
+/// </summary>
 public class CommandExecutor : MonoBehaviour
 {
     private Command commandToExecute = null;
@@ -31,6 +34,7 @@ public class CommandExecutor : MonoBehaviour
 
     public void TryToExecute(Command command)
     {
+        //Free the command "space" only when movement is completed.
         if (commandToExecute != null && commandToExecute.commandCompleted)
         {
             commandToExecute = null;
@@ -41,6 +45,7 @@ public class CommandExecutor : MonoBehaviour
             commandToExecute = command;
             commandToExecute.Execute(mapController);
 
+            //Check if level is completed.
             if(mapController.AreBoxesInPlace())
             {
                 Debug.Log("LEVEL COMPLETED!");

@@ -3,43 +3,67 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Handles level statistics JSON file operations.
+/// </summary>
 public class LevelStatistics
 {
     private LevelDataCollection levelStatisticsData;
 
-    public bool LevelCollectionJSONExists()
+    /// <summary>
+    /// Checks if level statistics file exist.
+    /// </summary>
+    /// <returns></returns>
+    public bool LevelStatisticsJSONExists()
     {
         return System.IO.File.Exists(GameFilePaths.LevelStatisticsFileName);
     }
 
-    public void CreateInitialLevelCollection(LevelDataCollection initialLevelData)
+    /// <summary>
+    /// Saves the initial level statistics file. Can be written better. 
+    /// </summary>
+    /// <param name="initialLevelData"></param>
+    public void CreateInitialLevelStatistics(LevelDataCollection initialLevelData)
     {
         string levelCollection = JsonUtility.ToJson(initialLevelData);
         System.IO.File.WriteAllText(GameFilePaths.LevelStatisticsFileName, levelCollection);
     }
 
-    public LevelDataCollection LoadLevelCollection()
+    /// <summary>
+    /// Loads the level statistics.
+    /// </summary>
+    /// <returns></returns>
+    public LevelDataCollection LoadLevelStatistics()
     {
         string levelCollectionJSON = System.IO.File.ReadAllText(GameFilePaths.LevelStatisticsFileName);
         levelStatisticsData = JsonUtility.FromJson<LevelDataCollection>(levelCollectionJSON);
         return levelStatisticsData;
     }
 
-    public void SaveLevelCollection(LevelDataCollection levelCollectionToSave)
-    {
-        string levelCollection = JsonUtility.ToJson(levelCollectionToSave);
-        System.IO.File.WriteAllText(GameFilePaths.LevelStatisticsFileName, levelCollection);
-    }
+    //public void SaveLevelStatistics(LevelDataCollection levelCollectionToSave)
+    //{
+    //    string levelCollection = JsonUtility.ToJson(levelCollectionToSave);
+    //    System.IO.File.WriteAllText(GameFilePaths.LevelStatisticsFileName, levelCollection);
+    //}
 
-    public void SaveLevelCollection()
+    /// <summary>
+    /// Saves changes to level statistics file. Used on private variable when updating statistics (e.g. level completed, etc.)
+    /// </summary>
+    public void SaveLevelStatistics()
     {
         string levelCollection = JsonUtility.ToJson(levelStatisticsData);
         System.IO.File.WriteAllText(GameFilePaths.LevelStatisticsFileName, levelCollection);
     }
 
-    public void UpdateLevelCollection(int levelID, bool isCompleted, int lastTime)
+    /// <summary>
+    /// Updates statistics (e.g. level completed, etc.)
+    /// </summary>
+    /// <param name="levelID"></param>
+    /// <param name="isCompleted"></param>
+    /// <param name="lastTime"></param>
+    public void UpdateLevelStatistics(int levelID, bool isCompleted, int lastTime)
     {
-        if (LevelCollectionJSONExists())
+        if (LevelStatisticsJSONExists())
         {
             levelStatisticsData.LevelsData[levelID].NumbersPlayed++;
             if (!levelStatisticsData.LevelsData[levelID].IsCompleted)//If it's already completed, don't change this bool
@@ -61,17 +85,25 @@ public class LevelStatistics
                 levelStatisticsData.LevelsData[levelID].BestCompletedTimeInSeconds = lastTime;
             }
 
-            SaveLevelCollection();
+            SaveLevelStatistics();
         }
     }
 
+    /// <summary>
+    /// Updates only times played (e.g. reset level, main menu, etc.)
+    /// </summary>
+    /// <param name="levelID"></param>
     public void UpdateTimesPlayedOnly(int levelID)
     {
         levelStatisticsData.LevelsData[levelID].NumbersPlayed++;
 
-        SaveLevelCollection();
+        SaveLevelStatistics();
     }
 
+    /// <summary>
+    /// Gets the total number of levels
+    /// </summary>
+    /// <returns></returns>
     public int GetNumberOfLevels()
     {
         return levelStatisticsData.LevelsData.Count;

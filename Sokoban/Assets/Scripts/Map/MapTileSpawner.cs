@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Spawns prefab tiles for map to be created.
+/// </summary>
 public class MapTileSpawner : MonoBehaviour
 {
     #region Publicly exposed properties
@@ -93,6 +96,9 @@ public interface ITileSpawner
     public MapTile SpawnTile(MapTileData tileData, MapTile tilePrefab, int positionX, int positionY, int positionZ, Transform mapParent);
 }
 
+/// <summary>
+/// Spawner class. Inherits ScriptableObject for the sole reason of being able to use Instantiate. It would be weird to inherit from MonoBehaviour...
+/// </summary>
 public class TileSpawner : ScriptableObject, ITileSpawner
 {
     public MapTile SpawnTile(MapTileData tileData, MapTile tilePrefab, int positionX, int positionY, int positionZ, Transform mapParent)

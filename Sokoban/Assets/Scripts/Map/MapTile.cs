@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
+/// <summary>
+/// Basic building block.
+/// </summary>
 public enum EnumTileType
 {
     Wall,

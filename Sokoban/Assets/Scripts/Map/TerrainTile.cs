@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Terrain tile. Minimal number of behaviour in addition to MapTile.
+/// </summary>
 public class TerrainTile : MapTile
 {
     //public void PrepareTile(MapTileData tileData)
@@ -19,5 +22,20 @@ public class TerrainTile : MapTile
     void Update()
     {
         
+    }
+
+    /// <summary>
+    /// A very ugly solution... :/
+    /// </summary>
+    public void PlayParticles()
+    {
+        var particles = GetComponent<ParticleSystem>();
+        if (particles != null)
+        {
+            if (!particles.isPlaying)
+            {
+                particles.Play();
+            }
+        }
     }
 }

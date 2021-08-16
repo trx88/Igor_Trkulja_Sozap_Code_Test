@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// Used for JSON map data.
+/// </summary>
 [System.Serializable]
 public class MapTileData
 {

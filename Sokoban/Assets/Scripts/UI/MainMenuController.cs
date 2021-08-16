@@ -92,6 +92,6 @@ public class MainMenuController : MonoBehaviour
 
     public void OnSliderEffectsChange()
     {
-        PlayerSettings.Instance.SetMusicLevel(sliderEffects.value);
+        PlayerSettings.Instance.SetEffectsLevel(sliderEffects.value);
     }
 }

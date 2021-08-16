@@ -193,7 +193,7 @@ public class MapController : MonoBehaviour
 
         //playerSettings = GetComponent<PlayerSettings>();
         AudioLevelPlayMusic.volume = PlayerSettings.Instance.GetMusicLevel();
-        AudioLevelCompletedMusic.volume = PlayerSettings.Instance.GetMusicLevel() / 2;
+        AudioLevelCompletedMusic.volume = PlayerSettings.Instance.GetMusicLevel();
         PlayerReference.GetComponent<AudioSource>().volume = PlayerSettings.Instance.GetEffectsLevel();
         AudioLevelCompletedMusic.Stop();
 

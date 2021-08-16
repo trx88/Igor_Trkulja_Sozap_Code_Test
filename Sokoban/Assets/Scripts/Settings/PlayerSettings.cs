@@ -18,6 +18,19 @@ public class PlayerSettings : MonoBehaviour
     {
         DontDestroyOnLoad(gameObject);
         instance = this;
+
+        //PlayerPrefs.DeleteAll();
+        if (!PlayerPrefs.HasKey(MUSIC_LEVEL_KEY))
+        {
+            PlayerPrefs.SetFloat(MUSIC_LEVEL_KEY, 1.0f);
+            PlayerPrefs.Save();
+        }
+        if (!PlayerPrefs.HasKey(EFFECT_LEVEL_KEY))
+        { 
+            PlayerPrefs.SetFloat(EFFECT_LEVEL_KEY, 1.0f);
+            PlayerPrefs.Save();
+        }
+
     }
 
     // Start is called before the first frame update
@@ -34,14 +47,7 @@ public class PlayerSettings : MonoBehaviour
 
     public float GetMusicLevel()
     {
-        if (PlayerPrefs.HasKey(MUSIC_LEVEL_KEY))
-        {
-            return PlayerPrefs.GetFloat(MUSIC_LEVEL_KEY);
-        }
-        else
-        {
-            return 0.5f;
-        }
+        return PlayerPrefs.GetFloat(MUSIC_LEVEL_KEY);
     }
 
     public void SetMusicLevel(float musicLevelValue)
@@ -52,14 +58,7 @@ public class PlayerSettings : MonoBehaviour
 
     public float GetEffectsLevel()
     {
-        if (PlayerPrefs.HasKey(EFFECT_LEVEL_KEY))
-        {
-            return PlayerPrefs.GetFloat(EFFECT_LEVEL_KEY);
-        }
-        else
-        {
-            return 1.0f;
-        }
+        return PlayerPrefs.GetFloat(EFFECT_LEVEL_KEY);
     }
 
     public void SetEffectsLevel(float effectsLevelValue)
